@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="siat_invoice_header_company">
+			<div t-if="not is_ticket" style="margin-bottom: 4pt;">
+			<div>
+				<img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
+			</div>
+		</div>
+		<div style="font-size: 10pt; font-weight: bold; line-height: 1.3; margin-bottom: 1pt;">
+			<span t-esc="razon_social"></span>
+		</div>
+		<div style="font-size: 10pt; font-weight: bold; line-height: 1.3; margin-bottom: 2pt;">
+			<span t-esc="sucursal"></span>
+		</div>
+		<div style="font-size: 9pt; line-height: 1.3; margin-bottom: 1pt;">
+			Nro. Punto de Venta <span t-field="siat_invoice.punto_venta"></span>
+		</div>
+		<div style="font-size: 9pt; line-height: 1.3; margin-bottom: 1pt;" t-out="cufd.address"></div>
+		<div style="font-size: 9pt; line-height: 1.3; margin-bottom: 1pt;">
+			Telf: <span t-out="telefono"></span>
+		</div>
+		<div style="font-size: 9pt; line-height: 1.3;" t-out="ciudad"></div>
+	</template>
+	
+	<template id="siat_invoice_header_labels">
+		<div style="font-size: 9pt; font-weight: bold; line-height: 1.3; margin-bottom: 3pt;">NIT:</div>
+		<div style="font-size: 9pt; font-weight: bold; line-height: 1.3; margin-bottom: 3pt;">FACTURA N°:</div>
+		<div style="font-size: 9pt; font-weight: bold; line-height: 1.3;">CÓDIGO DE AUTORIZACIÓN:</div>
+	</template>
+
+	<template id="siat_invoice_header_data">
+		<div t-if="is_ticket" style="font-size: 9pt; font-weight: bold; line-height: 1.3;">NIT:</div>
+		<div style="font-size: 9pt; line-height: 1.3; margin-bottom: 3pt;">
+			<span t-field="siat_invoice.nit_emisor"></span>
+		</div>
+		<div t-if="is_ticket" style="font-size: 9pt; font-weight: bold; line-height: 1.3;">FACTURA N°:</div>
+		<div style="font-size: 9pt; line-height: 1.3; margin-bottom: 3pt;">
+			<span t-field="siat_invoice.invoice_number"></span>
+		</div>
+		<div t-if="is_ticket" style="font-size: 9pt; font-weight: bold; line-height: 1.3;">CÓDIGO DE AUTORIZACIÓN:</div>
+		<div style="font-size: 9pt; line-height: 1.2; word-break: break-all;">
+			<span t-out="siat_invoice.get_cuf_chunked(is_ticket)"></span>
+		</div>
+	</template>
+	
+	<template id="siat_invoice_header">
+		<table style="width:100%; border-collapse: collapse; border: none; margin-bottom: 8pt;">
+		<tr>
+			<td style="width:35%;text-align:center; border: none; vertical-align: top;">
+				<t t-call="siat_module.siat_invoice_header_company" />
+			</td>
+			<td style="width:20%; border: none;"></td>
+			<td style="width:20%; border: none; vertical-align: top;">
+				<t t-call="siat_module.siat_invoice_header_labels" />
+			</td>
+			<td style="width:25%; border: none; vertical-align: top;">
+				<t t-call="siat_module.siat_invoice_header_data" />
+			</td>
+		</tr>
+		</table>
+	</template>
+	
+	<template id="siat_invoice_info">
+		<div style="text-align:center; margin-top: 6pt; margin-bottom: 10pt;">
+			<div class="primary-col-bg" style="font-size: 14pt; font-weight: bold; line-height: 1.3; margin-bottom: 2pt;">FACTURA</div>
+			<div class="primary-col-bg" style="font-size: 9pt; line-height: 1.3;">(Con Derecho a Credito Fiscal)</div>
+		</div>
+		<div style="margin-top: 12pt; margin-bottom: 14pt;">
+			<table style="width:100%; border-collapse: collapse; border: none;">
+			<tr>
+				<td style="border: none; width: 15%; vertical-align: top;">
+					<div style="font-size: 9pt; font-weight: bold; line-height: 1.4;">Fecha:</div>
+				</td>
+				<td style="border: none; width: 25%; vertical-align: top;">
+					<div style="font-size: 9pt; line-height: 1.4;" t-esc="get_invoice_datetime(siat_invoice.invoice_datetime)"></div>
+				</td>
+				<td style="width:20%; border: none;"></td>
+				<td style="border: none; width: 10%; vertical-align: top;">
+					<div style="font-size: 9pt; font-weight: bold; line-height: 1.4;">NIT/CI/CEX:</div>
+				</td>
+				<td style="border: none; width: 30%; vertical-align: top;">
+					<div style="font-size: 9pt; line-height: 1.4;">
+						<t t-if="siat_invoice.complemento">
+							<t t-esc="siat_invoice.nit_ruc_nif + '-' + siat_invoice.complemento" />
+						</t>
+						<t t-else="">
+							<t t-esc="siat_invoice.nit_ruc_nif" />
+						</t>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td style="border: none; vertical-align: top; padding-top: 3pt;">
+					<div style="font-size: 9pt; font-weight: bold; line-height: 1.4;">Nombre/Razon Social:</div>
+				</td>
+				<td style="border: none; vertical-align: top; padding-top: 3pt;">
+					<div style="font-size: 9pt; line-height: 1.4;" t-field="siat_invoice.customer_name"></div>
+				</td>
+				<td style="width:10%; border: none;"></td>
+				<td style="border: none; vertical-align: top; padding-top: 3pt;">
+					<div style="font-size: 9pt; font-weight: bold; line-height: 1.4;">Cod. Cliente:</div>
+				</td>
+				<td style="border: none; vertical-align: top; padding-top: 3pt;">
+					<div style="font-size: 9pt; line-height: 1.4;" t-field="siat_invoice.partner_id"></div>
+				</td>
+			</tr>
+			</table>
+		</div>
+	</template>
+	
+	<template id="siat_invoice_items_totals">
+		<div class="page">
+			<t t-set="payamount" t-value="siat_invoice.total - siat_invoice.monto_giftcard"/>
+			<t t-set="total_rows" t-value="5"/>
+			<table class="table table-sm" style="border-collapse: collapse; width: 100%; border: 1px solid #000; margin: 0; padding: 0; page-break-inside: auto !important;">
+				<tbody>
+					<tr style="page-break-inside: avoid !important; page-break-after: auto !important;">
+						<th style="border:1px solid #000; padding:6pt; text-align:center; font-weight:bold; width:10%; font-size: 9pt; line-height: 1.3;">
+							CÓDIGO<br/>PRODUCTO/<br/>SERVICIO
+						</th>
+						<th style="border:1px solid #000; padding:6pt; text-align:center; font-weight:bold; width:10%; font-size: 9pt; line-height: 1.3;">
+							CANTIDAD
+						</th>
+						<th style="border:1px solid #000; padding:6pt; text-align:center; font-weight:bold; width:10%; font-size: 9pt; line-height: 1.3;">
+							UNIDAD DE<br/>MEDIDA
+						</th>
+						<th style="border:1px solid #000; padding:6pt; text-align:center; font-weight:bold; width:10%; font-size: 9pt; line-height: 1.3;">
+							DESCRIPCIÓN
+						</th>
+						<th style="border:1px solid #000; padding:6pt; text-align:center; font-weight:bold; width:10%; font-size: 9pt; line-height: 1.3;">
+							PRECIO<br/>UNITARIO
+						</th>
+						<th style="border:1px solid #000; padding:6pt; text-align:center; font-weight:bold; width:10%; font-size: 9pt; line-height: 1.3;">
+							DESCUENTO
+						</th>
+						<th style="border:1px solid #000; padding:6pt; text-align:center; font-weight:bold; width:10%; font-size: 9pt; line-height: 1.3;">
+							SUBTOTAL
+						</th>
+					</tr>
+					<t t-foreach="siat_invoice.items" t-as="item">
+						<tr style="border: 1px solid #000; page-break-inside: avoid !important; page-break-after: auto !important;">
+							<td style="border: 1px solid #000; padding: 5pt; text-align: left; font-size: 9pt; line-height: 1.3;">
+								<div t-field="item.product_code"></div>
+							</td>
+							<td style="border: 1px solid #000; padding: 5pt; text-align: center; font-size: 9pt; line-height: 1.3;">
+								<div t-field="item.quantity"></div>
+							</td>
+							<td style="border: 1px solid #000; padding: 5pt; text-align: left; font-size: 9pt; line-height: 1.3;">
+								<div t-esc="get_unidad_medida(item.unidad_medida)"></div>
+							</td>
+							<td style="border: 1px solid #000; padding: 5pt; text-align: left; font-size: 9pt; line-height: 1.3;">
+								<div t-out="item.product_name"></div>
+							</td>
+							<td style="border: 1px solid #000; padding: 5pt; text-align:right; font-size: 9pt; line-height: 1.3;">
+								<div t-esc="'{0:,.2f}'.format(item.price)"></div>
+							</td>
+							<td style="border: 1px solid #000; padding: 5pt; text-align:right; font-size: 9pt; line-height: 1.3;">
+								<div t-esc="'{0:,.2f}'.format(item.discount)"></div>
+							</td>
+							<td style="border: 1px solid #000; padding: 5pt; text-align:right; font-size: 9pt; line-height: 1.3;">
+								<div t-esc="'{0:,.2f}'.format(item.total)"></div>
+							</td>
+						</tr>
+					</t>
+					<tr style="page-break-inside: avoid !important; page-break-after: auto !important;">
+						<td t-att-rowspan="total_rows" colspan="4" style="
+							border-top: 1px solid #fff; 
+							border-left: 1px solid #fff; 
+							border-bottom: 1px solid #fff;
+							border-right: 1px solid #000;
+							text-align: left; 
+							vertical-align: middle; 
+							padding: 8pt;
+							font-size: 9pt;
+							line-height: 1.3;">
+							<span style="font-weight: bold; text-transform:uppercase;">SON: <span t-esc="amount_text"></span></span>
+						</td>
+						<td colspan="2" style="border: 1px solid #000; padding: 5pt; text-align: right; font-size: 9pt; line-height: 1.3;">SUBTOTAL Bs</td>
+						<td style="border: 1px solid #000; padding: 5pt; text-align: right; font-size: 9pt; line-height: 1.3;">
+							<span t-esc="'{0:,.2f}'.format(siat_invoice.subtotal)"></span>
+						</td>
+					</tr>
+					<tr style="page-break-inside: avoid !important; page-break-after: auto !important;">
+						<td colspan="2" style="text-align:right; border: 1px solid #000; padding: 5pt; font-size: 9pt; line-height: 1.3;">DESCUENTO Bs</td>
+						<td style="border: 1px solid #000; padding: 5pt; text-align: right; font-size: 9pt; line-height: 1.3;">
+							<span t-esc="'{0:,.2f}'.format(siat_invoice.discount)"></span>
+						</td>
+					</tr>
+					<tr style="page-break-inside: avoid !important; page-break-after: auto !important;">
+						<td colspan="2" style="text-align:right; border: 1px solid #000; padding: 5pt; font-size: 9pt; line-height: 1.3;">TOTAL Bs</td>
+						<td style="border: 1px solid #000; padding: 5pt; text-align: right; font-size: 9pt; line-height: 1.3;">
+							<span t-esc="'{0:,.2f}'.format(siat_invoice.total)"></span>
+						</td>
+					</tr>
+					<t t-if="siat_invoice.monto_giftcard > 0">
+						<tr style="page-break-inside: avoid !important; page-break-after: auto !important;">
+							<td colspan="2" style="text-align:right; border: 1px solid #000; padding: 5pt; font-size: 9pt; line-height: 1.3;">MONTO GIFT CARD Bs</td>
+							<td style="border: 1px solid #000; padding: 5pt; text-align: right; font-size: 9pt; line-height: 1.3;">
+								<span t-esc="'{0:,.2f}'.format(siat_invoice.monto_giftcard)"></span>
+							</td>
+						</tr>
+					</t>
+					<tr style="page-break-inside: avoid !important; page-break-after: auto !important;">
+						<td colspan="2" style="text-align:right; border: 1px solid #000; padding: 5pt; font-weight: bold; font-size: 9pt; line-height: 1.3;">MONTO A PAGAR Bs</td>
+						<td style="border: 1px solid #000; padding: 5pt; text-align: right; font-weight: bold; font-size: 9pt; line-height: 1.3;">
+							<span t-esc="'{0:,.2f}'.format(payamount)"></span>
+						</td>
+					</tr>
+					<tr style="page-break-inside: avoid !important; page-break-after: auto !important;">
+						<td colspan="2" style="text-align:right; border: 1px solid #000; padding: 5pt; font-weight: bold; font-size: 9pt; line-height: 1.3; white-space: nowrap;">IMPORTE BASE CRÉDITO FISCAL Bs</td>
+						<td style="border: 1px solid #000; padding: 5pt; text-align: right; font-weight: bold; font-size: 9pt; line-height: 1.3;">
+							<span t-esc="'{0:,.2f}'.format(payamount)"></span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</template>
+	<template id="siat_invoice_legend">
+		<div style="font-size: 8pt; line-height: 1.4; margin-bottom: 5pt; text-align: center;">
+			ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAÍS, EL USO ILÍCITO SERÁ SANCIONADO PENALMENTE DE ACUERDO A LEY
+		</div>
+		<br/>
+		<div style="font-size: 8pt; line-height: 1.4; margin-bottom: 5pt; text-align: center;">
+			<span t-esc="siat_invoice.leyenda"></span>
+		</div>
+		<br/>
+		<div style="font-size: 8pt; line-height: 1.4; text-align: center;  font-weight: bold;">
+			<t t-if="not siat_invoice.evento_id">
+				"Este documento es la Representación Gráfica de un Documento Fiscal Digital emitido en una modalidad de facturación en línea"
+			</t>
+			<t t-if="siat_invoice.evento_id">
+				"Este documento es la Representación Gráfica de un Documento Fiscal Digital emitido en una modalidad de facturación fuera de línea, verifique su envío con su proveedor o en la página web <a href='http://www.impuestos.gob.bo' target='_blank'>www.impuestos.gob.bo</a>"
+			</t>
+		</div>
+	</template>
+	<template id="siat_invoice_qr">
+		<div style="text-align:center;">
+			<img t-att-src="qr_buffer" style="height:150px; width:150px;" />
+		</div>
+	</template>
+	<template id="siat_invoice_legend_qr">
+		<div id="invoice_legend_qr" style="margin-top: 14pt; page-break-inside: avoid;">
+			<table style="width:100%; border-collapse: collapse; border: none; page-break-inside: avoid;">
+			<tr>
+				<td style="width:70%;text-align:left; vertical-align:middle; border: none;">
+					<t t-call="siat_module.siat_invoice_legend"/>
+				</td>
+				<td style="border: none; vertical-align:middle;">
+					<div style="text-align:center;">
+						<t t-call="siat_module.siat_invoice_qr"/>
+					</div>
+				</td>
+			</tr>
+			</table>
+		</div>
+	</template>
+
+	<template id="siat_invoice_template">
+		<t t-call="web.html_container">
+			<t t-call="web.basic_layout">
+			<t t-set="primary_color" t-value="primary_color"/>
+			<t t-set="secondary_color" t-value="secondary_color"/>
+			<t t-set="company" t-value="res_company"/>
+				<style>
+					.primary-col-bg {
+						color: <t t-esc="primary_color"/>;
+					}
+					.secondary-col-bg {
+						color: <t t-esc="secondary_color"/>;
+					}
+				</style>
+				<t t-foreach="docs" t-as="o">
+			        <t t-set="siat_invoice" t-value="o.siat_invoice_id"/>
+					<t t-call="siat_module.siat_invoice_header"/>
+					<t t-call="siat_module.siat_invoice_info"/>
+					<t t-call="siat_module.siat_invoice_items_totals"/>
+					<br/>
+					<t t-call="siat_module.siat_invoice_legend_qr"/>
+				</t>
+			</t>
+		</t>
+	</template>
+
+	<template id="siat_invoicer_template">
+		<t t-call="web.html_container">
+			<t t-call="web.basic_layout">
+			<t t-set="primary_color" t-value="primary_color"/>
+			<t t-set="secondary_color" t-value="secondary_color"/>
+			<t t-set="company" t-value="res_company"/>
+				<style>
+					.primary-col-bg {
+						color: <t t-esc="primary_color"/>;
+					}
+					.secondary-col-bg {
+						color: <t t-esc="secondary_color"/>;
+					}
+				</style>
+				<t t-foreach="docs" t-as="o">
+          			<t t-set="siat_invoice" t-value="o"/>
+					<t t-call="siat_module.siat_invoice_header"/>
+					<t t-call="siat_module.siat_invoice_info"/>
+					<t t-call="siat_module.siat_invoice_items_totals"/>
+					<t t-call="siat_module.siat_invoice_legend_qr"/>
+				</t>
+			</t>
+		</t>
+	</template>
+
+	<template id="siat_invoice_template_ticket">
+		<t t-call="web.html_container">
+			<t t-call="web.basic_layout">
+				<style>* { font-family: Arial, Helvetica, sans-serif; }</style>
+				<div class="page" style="width: 80mm; background: #fff; margin: 0 auto; padding: 0;">
+					<t t-foreach="docs" t-as="o">
+						<t t-set="siat_invoice" t-value="o.siat_invoice_id"/>
+						<t t-set="payamount" t-value="siat_invoice.total - siat_invoice.monto_giftcard"/>
+						<div style="text-align: center; padding: 12px 8px 8px 8px;">
+							<div t-if="res_company and res_company.logo" style="margin-bottom: 6px;">
+								<img t-att-src="image_data_uri(res_company.logo)" style="max-height: 48px; max-width: 130px; object-fit: contain;" alt="Logo"/>
+							</div>
+							<div style="font-size: 11px; font-weight: bold; color: #111; line-height: 1.3;">FACTURA</div>
+							<div style="font-size: 10px; font-weight: bold; color: #111; line-height: 1.3; margin-bottom: 4px;">CON DERECHO A CRÉDITO FISCAL</div>
+							<div style="font-size: 10px; color: #111; line-height: 1.4; text-transform: uppercase;"><span t-esc="razon_social"/></div>
+							<div style="font-size: 10px; color: #111; line-height: 1.4;"><span t-esc="sucursal"/></div>
+							<div style="font-size: 10px; color: #111; line-height: 1.4;">Nro. Punto de Venta <span t-field="siat_invoice.punto_venta"/></div>
+							<div style="font-size: 10px; color: #111; line-height: 1.4;" t-out="cufd.address"/>
+							<div style="font-size: 10px; color: #111; line-height: 1.4;">Tel: <span t-out="telefono"/></div>
+							<div style="font-size: 10px; color: #111; line-height: 1.4;" t-out="ciudad"/>
+						</div>
+						<div style="border-top: 2px dashed #222; margin: 0 4px;"/>
+						<div style="padding: 6px 8px; text-align: center;">
+							<div style="font-size: 10px; font-weight: bold; color: #111; line-height: 1.4;">NIT</div>
+							<div style="font-size: 10px; color: #111; line-height: 1.4; margin-bottom: 3px;"><span t-field="siat_invoice.nit_emisor"/></div>
+							<div style="font-size: 10px; font-weight: bold; color: #111; line-height: 1.4;">FACTURA N°</div>
+							<div style="font-size: 10px; color: #111; line-height: 1.4; margin-bottom: 3px;"><span t-field="siat_invoice.invoice_number"/></div>
+							<div style="font-size: 10px; font-weight: bold; color: #111; line-height: 1.4;">CÓD. AUTORIZACIÓN</div>
+							<div style="font-size: 9.5px; color: #111; line-height: 1.4; word-break: break-all;"><span t-out="siat_invoice.get_cuf_chunked(is_ticket)"/></div>
+						</div>
+						<div style="border-top: 2px dashed #222; margin: 0 4px;"/>
+						<div style="padding: 6px 8px;">
+							<table style="width: 100%; border-collapse: collapse; border: none; font-size: 10px; color: #111;">
+								<tr>
+									<td style="border: none; padding: 0; text-align: right; white-space: nowrap; vertical-align: top; line-height: 1.4;">
+										<span style="font-weight: bold;">
+											NOMBRE/RAZÓN SOCIAL:
+										</span>
+									</td>
+									<td style="border: none; padding-left: 6px; vertical-align: top; line-height: 1.4;">
+										<span t-field="siat_invoice.customer_name"/>
+									</td>
+								</tr>
+								<tr>
+									<td style="border: none; padding: 0; text-align: right; vertical-align: top; line-height: 1.4;">
+										<span style="font-weight: bold;">
+											NIT/CI/CEX:
+										</span>
+									</td>
+									<td style="border: none; padding-left: 6px; vertical-align: top; line-height: 1.4;">
+										<span t-field="siat_invoice.nit_ruc_nif"/>
+									</td>
+								</tr>
+								<tr>
+									<td style="border: none; padding: 0; text-align: right; vertical-align: top; line-height: 1.4;">
+										<span style="font-weight: bold;">
+											COD. CLIENTE:
+										</span>
+									</td>
+									<td style="border: none; padding-left: 6px; vertical-align: top; line-height: 1.4;">
+										<span t-field="siat_invoice.partner_id"/>
+									</td>
+								</tr>
+								<tr>
+									<td style="border: none; padding: 0; text-align: right; vertical-align: top; line-height: 1.4;">
+										<span style="font-weight: bold;">
+											FECHA DE EMISIÓN:
+										</span>
+									</td>
+									<td style="border: none; padding-left: 6px; vertical-align: top; line-height: 1.4;">
+										<span t-esc="get_invoice_datetime(siat_invoice.invoice_datetime)"/>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div style="border-top: 2px dashed #222; margin: 0 4px;"/>
+						<div style="padding: 5px 8px 0 8px;">
+							<div style="font-size: 10px; font-weight: bold; color: #111; text-align: center; margin-bottom: 4px;">
+								DETALLE
+							</div>
+							<t t-foreach="siat_invoice.items" t-as="item">
+								<table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 3px;">
+									<tr>
+										<td style="border: none; padding: 0; vertical-align: top; width: 75%;">
+											<div style="font-size: 10px; font-weight: bold; color: #111; line-height: 1.4;">
+												<span t-field="item.product_code"/> - 
+												<span t-field="item.product_name"/>
+											</div>
+											<div style="font-size: 10px; color: #111; line-height: 1.4; padding-left: 6px;">
+												Unidad de Medida: 
+												<span t-esc="get_unidad_medida(item.unidad_medida)"/>
+											</div>
+											<div style="font-size: 10px; color: #111; line-height: 1.4;">
+												<span t-field="item.quantity"/> 
+												X <span t-esc="'{0:,.2f}'.format(item.price)"/> 
+												- <span t-esc="'{0:,.2f}'.format(item.discount)"/>
+											</div>
+										</td>
+										<td style="border: none; padding: 0; vertical-align: bottom; text-align: right; white-space: nowrap; width: 25%;">
+											<div style="font-size: 10px; color: #111; line-height: 1.4;">
+												<span t-esc="'{0:,.2f}'.format(item.total)"/>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</t>
+						</div>
+						<div style="border-top: 2px dotted #111; margin: 2px 4px 0 4px;"/>
+						<div style="padding: 2px 8px 6px 8px;">
+							<table style="width: 100%; border-collapse: collapse; border: none;">
+								<tr>
+									<td style="border: none; font-size: 10px; color: #111; padding: 2px 0; text-align: right;">SUBTOTAL Bs</td>
+									<td style="border: none; font-size: 10px; color: #111; padding: 2px 0; text-align: right; width: 28%;"><span t-esc="'{0:,.2f}'.format(siat_invoice.subtotal)"/></td>
+								</tr>
+								<tr>
+									<td style="border: none; font-size: 10px; color: #111; padding: 2px 0; text-align: right;">DESCUENTO Bs</td>
+									<td style="border: none; font-size: 10px; color: #111; padding: 2px 0; text-align: right;"><span t-esc="'{0:,.2f}'.format(siat_invoice.discount)"/></td>
+								</tr>
+								<tr>
+									<td style="border: none; font-size: 10px; color: #111; padding: 2px 0; text-align: right;">TOTAL Bs</td>
+									<td style="border: none; font-size: 10px; color: #111; padding: 2px 0; text-align: right;"><span t-esc="'{0:,.2f}'.format(siat_invoice.total)"/></td>
+								</tr>
+								<tr>
+									<td style="border: none; font-size: 10px; color: #111; padding: 2px 0; text-align: right;">MONTO GIFT CARD Bs</td>
+									<td style="border: none; font-size: 10px; color: #111; padding: 2px 0; text-align: right;"><span t-esc="'{0:,.2f}'.format(siat_invoice.monto_giftcard)"/></td>
+								</tr>
+								<tr>
+									<td style="border: none; font-size: 10px; font-weight: bold; color: #111; padding: 2px 0; text-align: right; background-color: #efefef;">MONTO A PAGAR Bs</td>
+									<td style="border: none; font-size: 10px; font-weight: bold; color: #111; padding: 2px 0; text-align: right; background-color: #efefef;"><span t-esc="'{0:,.2f}'.format(payamount)"/></td>
+								</tr>
+								<tr>
+									<td style="border: none; font-size: 10px; font-weight: bold; color: #111; padding: 2px 0; text-align: right; background-color: #efefef;">IMPORTE BASE CRÉDITO FISCAL Bs</td>
+									<td style="border: none; font-size: 10px; font-weight: bold; color: #111; padding: 2px 0; text-align: right; background-color: #efefef;"><span t-esc="'{0:,.2f}'.format(payamount)"/></td>
+								</tr>
+							</table>
+						</div>
+						<div style="padding: 4px 8px 5px 8px; font-size: 10px; color: #111; line-height: 1.4;">
+							Son: <span t-esc="amount_text"/>
+						</div>
+						<div style="border-top: 2px dashed #222; margin: 0 4px;"/>
+						<div style="padding: 8px 8px 12px 8px; text-align: center;">
+							<div style="font-size: 9px; color: #111; line-height: 1.5; margin-bottom: 5px; text-transform: uppercase;">
+								ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAÍS,
+								EL USO ILÍCITO SERÁ SANCIONADO PENALMENTE DE ACUERDO A LEY
+							</div>
+							<div style="font-size: 9px; color: #111; line-height: 1.5; margin-bottom: 5px;"><span t-esc="siat_invoice.leyenda"/></div>
+							<div style="font-size: 9px; color: #111; line-height: 1.5; margin-bottom: 10px; font-style: italic;">
+								<t t-if="not siat_invoice.evento_id">
+									"Este documento es la Representación Gráfica de un Documento Fiscal Digital emitido en una modalidad de facturación en línea"
+								</t>
+								<t t-if="siat_invoice.evento_id">
+									"Este documento es la Representación Gráfica de un Documento Fiscal Digital emitido en una modalidad de facturación fuera de línea, verifique su envío con su proveedor o en la página web www.impuestos.gob.bo"
+								</t>
+							</div>
+							<img t-att-src="qr_buffer" style="height: 130px; width: 130px;" alt="QR"/>
+						</div>
+					</t>
+				</div>
+			</t>
+		</t>
+	</template>
+
+	<record id="siat_invoice_letter" model="report.paperformat">
+		<field name="name">Formato Estandar</field>
+		<field name="default" eval="False"/>
+		<field name="format">Letter</field>
+		<field name="orientation">Portrait</field>
+		<field name="margin_top">10</field>
+		<field name="margin_bottom">10</field>
+		<field name="margin_left">10</field>
+		<field name="margin_right">10</field>
+		<field name="header_line" eval="False"/>
+		<field name="header_spacing">0</field>
+		<field name="dpi">90</field>
+	</record>
+	<record id="siat_invoice_ticket" model="report.paperformat">
+		<field name="name">Formato Ticket</field>
+		<field name="default" eval="False"/>
+		<field name="format">custom</field>
+		<field name="orientation">Portrait</field>
+		<field name="page_width">85</field>
+		<field name="margin_top">2</field>
+		<field name="margin_bottom">1</field>
+		<field name="margin_left">1</field>
+		<field name="margin_right">1</field>
+		<field name="header_line" eval="False"/>
+		<field name="header_spacing">0</field>
+		<field name="dpi">90</field>
+	</record>
+
+	<data noupdate="1">
+		<record id="siat_account_invoices" model="ir.actions.report">
+			<field name="name">Factura SIAT</field>
+			<field name="model">account.move</field>
+			<field name="report_type">qweb-pdf</field>
+			<field name="report_name">siat_module.siat_invoice_template</field>
+			<field name="report_file">siat_module.siat_invoice_template</field>
+			<field name="print_report_name">
+				(object and
+				'Factura - %s - %s' % (
+					object.name or '',
+					object.siat_invoice_id.invoice_number or ''
+				)) or 'Factura SIAT'
+			</field>
+			<field name="binding_model_id" ref="account.model_account_move"/>
+    		<field name="binding_type">report</field>
+			<field name="paperformat_id" ref="siat_module.siat_invoice_letter"/>
+		</record>
+		<record id="siat_invoice_report_ticket" model="ir.actions.report">
+			<field name="name">Ticket SIAT</field>
+			<field name="model">account.move</field>
+			<field name="report_type">qweb-pdf</field>
+			<field name="report_name">siat_module.siat_invoice_template_ticket</field>
+			<field name="report_file">siat_module.siat_invoice_template_ticket</field>
+			<field name="print_report_name">
+				(object and
+				'Factura - %s - %s' % (
+					object.name or '',
+					object.siat_invoice_id.invoice_number or ''
+				)) or 'Ticket SIAT'
+			</field>
+			<field name="paperformat_id" ref="siat_module.siat_invoice_ticket"/>
+			<field name="binding_model_id" ref="account.model_account_move"/>
+			<field name="binding_type">report</field>
+		</record>
+		<record id="siat_invoicer_report" model="ir.actions.report">
+			<field name="name">Factura SIAT Facturador</field>
+			<field name="model">siat.invoice</field>
+			<field name="report_type">qweb-pdf</field>
+			<field name="report_name">siat_module.siat_invoicer_template</field>
+			<field name="report_file">siat_module.siat_invoicer_template</field>
+			<field name="print_report_name">
+				'Factura - %s - %s' % (
+					object.customer_name,
+					object.invoice_number or ''
+				)
+			</field>
+			<field name="paperformat_id" ref="siat_module.siat_invoice_letter"/>
+			<field name="attachment"/>
+			<field name="attachment_use">True</field>
+		</record>
+	</data>
+</odoo>

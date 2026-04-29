@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+  <t t-name="siat_module.custom_card_field" t-inherit="web.CharField">
+      <xpath expr="//input" position="attributes">
+          <attribute name="t-on-input">_onInput</attribute>
+      </xpath>
+  </t>
+</templates>

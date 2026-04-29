@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="button_sync.ListView.Buttons" t-inherit="web.ListView.Buttons">
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="after">
+            <button type="button" class="btn btn-primary" style="margin-left: 10px;"  t-on-click="SyncList">
+                Sincronizar
+            </button>
+            <button type="button" class="btn btn-primary" style="margin-left: 10px;"  t-on-click="SyncAllList">
+                Sincronizar Todo
+            </button>
+        </xpath>
+    </t>
+</templates>

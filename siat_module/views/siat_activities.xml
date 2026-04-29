@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="siat_activity_view_list" model="ir.ui.view">
+        <field name="name">siat.activity.view.list</field>
+        <field name="model">siat.activity</field>
+        <field name="type">list</field>
+        <field name="arch" type="xml">
+            <list string="Códigos de Actividades" create="false" delete="false" duplicate="false">
+                <field name="id"/>
+                <field name="caeb"/>
+                <field name="description"/>
+                <field name="activity_type"/>
+                <field name="write_date" string="Fecha Actualización"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="siat_activity_view_list_extra" model="ir.ui.view">
+        <field name="name">siat.activity.list.inherit</field>
+        <field name="model">siat.activity</field>
+        <field name="inherit_id" ref="siat_module.siat_activity_view_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="js_class">button_in_list_sync</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

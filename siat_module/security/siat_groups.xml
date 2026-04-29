@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="module_category_siat" model="ir.module.category">
+            <field name="name">Facturación SIAT</field>
+            <field name="description">Permisos de acceso al módulo de facturación SIAT Bolivia</field>
+            <field name="sequence">100</field>
+        </record>
+
+        <record id="group_siat_user" model="res.groups">
+            <field name="name">Usuario</field>
+            <field name="category_id" ref="siat_module.module_category_siat"/>
+        </record>
+
+        <record id="group_siat_manager" model="res.groups">
+            <field name="name">Administrador</field>
+            <field name="category_id" ref="siat_module.module_category_siat"/>
+            <field name="implied_ids" eval="[(4, ref('siat_module.group_siat_user'))]"/>
+        </record>
+
+        <record id="base.group_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('siat_module.group_siat_user'))]"/>
+        </record>
+    </data>
+</odoo>

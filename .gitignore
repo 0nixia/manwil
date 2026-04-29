@@ -1,0 +1,7 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+*Siat_module/libsiat/certs
+*Siat_module/siat_data
+.vscode

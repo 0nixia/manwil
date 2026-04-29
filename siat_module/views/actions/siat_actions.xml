@@ -1,0 +1,166 @@
+<odoo>
+  <record id="siat_sync_activity_action" model="ir.actions.act_window">
+    <field name="name">Códigos de Actividades</field>
+    <field name="res_model">siat.activity</field>
+    <field name="view_mode">list</field>
+    <field name="context">{'active_test': False}</field>
+  </record>
+
+  <record id="siat_sync_doc_sector" model="ir.actions.act_window">
+    <field name="name">Actividades Documento Sector</field>
+    <field name="res_model">siat.document_sector</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id="siat_sync_invoice_labels" model="ir.actions.act_window">
+    <field name="name">Leyendas Factura</field>
+    <field name="res_model">siat.invoice_label</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id="siat_sync_service_message" model="ir.actions.act_window">
+    <field name="name">Mensajes Servicios</field>
+    <field name="res_model">siat.service_message</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id="siat_sync_product_service" model="ir.actions.act_window">
+    <field name="name">Producto Servicios</field>
+    <field name="res_model">siat.product_service</field>
+    <field name="view_mode">list</field>
+    <field name="context">{'active_test': False}</field>
+  </record>
+
+  <record id="siat_sync_significant_event" model="ir.actions.act_window">
+    <field name="name">Eventos Significativos</field>
+    <field name="res_model">siat.significant_event</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id="siat_sync_cancellation_reason" model="ir.actions.act_window">
+    <field name="name">Motivos Anulación</field>
+    <field name="res_model">siat.cancellation_reason</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id="siat_sync_countries" model="ir.actions.act_window">
+    <field name="name">Paises Origen</field>
+    <field name="res_model">siat.country</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id="siat_sync_identity_document" model="ir.actions.act_window">
+    <field name="name">Documentos de Identidad</field>
+    <field name="res_model">siat.identity_document</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id="siat_sync_type_document_sector" model="ir.actions.act_window">
+    <field name="name">Tipos Documento Sector</field>
+    <field name="res_model">siat.type_document_sector</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id="siat_sync_emission_type" model="ir.actions.act_window">
+    <field name="name">Tipos de Emisión</field>
+    <field name="res_model">siat.emission_type</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id="siat_sync_room_type" model="ir.actions.act_window">
+    <field name="name">Tipos Habitación</field>
+    <field name="res_model">siat.room_type</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id="siat_sync_payment_type" model="ir.actions.act_window">
+    <field name="name">Tipos Métodos de Pago</field>
+    <field name="res_model">siat.payment_type</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id="siat_sync_currency_type" model="ir.actions.act_window">
+    <field name="name">Tipos de Moneda</field>
+    <field name="res_model">siat.currency_type</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id="siat_sync_pos_type" model="ir.actions.act_window">
+    <field name="name">Tipos Punto de Venta</field>
+    <field name="res_model">siat.pos_type</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id="siat_sync_invoice_type" model="ir.actions.act_window">
+    <field name="name">Tipos Factura</field>
+    <field name="res_model">siat.invoice_type</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id="siat_sync_measure_units" model="ir.actions.act_window">
+    <field name="name">Unidades de Medida</field>
+    <field name="res_model">siat.measure_unit</field>
+    <field name="view_mode">list</field>
+    <field name="context">{'active_test': False}</field>
+  </record>
+
+  <record id="siat_pending_invoices_invoicer" model="ir.actions.act_window">
+    <field name="name">Facturas Pendientes Facturador</field>
+    <field name="res_model">siat.invoicer</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="siat_events_action" model="ir.actions.act_window">
+    <field name="name">Eventos</field>
+    <field name="res_model">siat.event</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="siat_config_settings_action" model="ir.actions.act_window">
+    <field name="name">Settings</field>
+    <field name="res_model">res.config.settings</field>
+    <field name="view_mode">form</field>
+    <field name="target">inline</field>
+    <field name="context">{'module' : 'siat_module', 'bin_size': False}</field>
+  </record>
+
+  <record id="siat_branches_action" model="ir.actions.act_window">
+    <field name="name">Sucursales</field>
+    <field name="res_model">siat.branch</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="siat_pos_action" model="ir.actions.act_window">
+    <field name="name">Puntos de Venta</field>
+    <field name="res_model">siat.point_of_sale</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+<!--  Actions for Register Button on SIAT Invoice  -->
+  <record id="siat_sync_invoices" model="ir.actions.act_window">
+    <field name="name">Facturas Emitidas</field>
+    <field name="res_model">siat.invoice</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id="siat_cufds_action" model="ir.actions.act_window">
+    <field name="name">CUFDs</field>
+    <field name="res_model">siat.cufd_code</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <record id='view_siat_employee_pos_form' model='ir.ui.view'>
+    <field name='name'>siat.employee.pos.form</field>
+    <field name='model'>siat.employee.pos</field>
+    <field name='arch' type='xml'>
+      <form>
+        <group>
+          <field name='company_id'/>
+          <field name='puntoventa_id'
+                options="{'no_create': True, 'no_open': True}"/>
+          <field name='actividad_id'/>
+        </group>
+      </form>
+    </field>
+  </record>
+</odoo>

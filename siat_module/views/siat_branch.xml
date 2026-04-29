@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_siat_branch_list" model="ir.ui.view">
+    <field name="name">siat.branch.list</field>
+    <field name="model">siat.branch</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="branch_code"/>
+        <field name="name"/>
+        <field name="address"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_siat_branch_form" model="ir.ui.view">
+    <field name="name">siat.branch.form</field>
+    <field name="model">siat.branch</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="company_id"/>
+            <field name="branch_code"/>
+            <field name="name"/>
+            <field name="description"/>
+            <field name="address"/>
+          </group>
+
+          <notebook>
+            <page string="Points of Sale">
+              <field name="siat_point_of_sale_ids">
+                <list edit="false" duplicate="false" delete="false">
+                  <field name="point_of_sale_code" string="Código PV"/>
+                  <field name="name"/>
+                  <field name="pos_type"/>
+                  <field name="cuis" string="CUIS"/>
+                  <field name="valid_for" string="Vigencia"/>
+                  <button name="delete_pos" type="object" string="Eliminar POS" class="btn btn-danger"/>
+                  <button name="get_cufd" type="object" string="CUFD" class="btn btn-info"/>
+                </list>
+              </field>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- Vista list principal de PVs — js_class activa el botón "Sincronizar" del JS -->
+  <record id="view_siat_point_of_sale_list" model="ir.ui.view">
+    <field name="name">siat.point_of_sale.list</field>
+    <field name="model">siat.point_of_sale</field>
+    <field name="arch" type="xml">
+      <list edit="false" duplicate="false" delete="false"
+            js_class="button_in_list_sync">
+        <field name="point_of_sale_code" string="Código PV"/>
+        <field name="name"/>
+        <field name="pos_type"/>
+        <field name="cuis" string="CUIS"/>
+        <field name="valid_for" string="Vigencia"/>
+        <field name="siat_branch"/>
+        <button name="delete_pos" type="object" string="Eliminar POS" class="btn btn-danger"/>
+        <button name="get_cufd" type="object" string="CUFD" class="btn btn-info"/>
+      </list>
+    </field>
+  </record>
+
+  <!-- Vista form completa para siat.point_of_sale -->
+  <record id="view_siat_point_of_sale_form" model="ir.ui.view">
+    <field name="name">siat.point_of_sale.form</field>
+    <field name="model">siat.point_of_sale</field>
+    <field name="arch" type="xml">
+      <form duplicate="false">
+        <sheet>
+          <div class="oe_title">
+            <label for="name" string="Nombre Punto de Venta"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <group>
+            <group string="Datos del Punto de Venta">
+              <field name="company_id"/>
+              <field name="pos_siat_id" string="Código PV (SIAT)" readonly="1"/>
+              <field name="pos_type"/>
+              <field name="descripcion"/>
+              <field name="codigo_sucursal"/>
+              <field name="siat_branch"/>
+            </group>
+            <group string="Códigos SIAT">
+              <field name="cuis" readonly="1"/>
+              <field name="valid_for" readonly="1"/>
+            </group>
+          </group>
+          <footer>
+            <button name="sync_cuis" type="object" string="Obtener CUIS" class="btn btn-secondary"/>
+            <button name="get_cufd" type="object" string="Obtener CUFD" class="btn btn-secondary"/>
+          </footer>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_siat_branch" model="ir.actions.act_window">
+    <field name="name">Branches</field>
+    <field name="res_model">siat.branch</field>
+    <field name="view_mode">list,form</field>
+  </record>
+</odoo>

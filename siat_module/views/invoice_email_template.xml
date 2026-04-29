@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="siat_invoice_email_template" model="mail.template">
+		<field name="name">SIAT INVOICE EMAIL TEMPLATE</field>
+		<field name="model_id" ref="siat_module.model_siat_invoice"></field>
+		<field name="auto_delete" eval="True"/>
+		<field name="email_from">onixiait@gmail.com</field>
+		<field name="email_to">{{ object.get_customer().email }}</field>
+		<field name="subject">Factura - {{ object.company_id.name }}</field>
+		<field name="body_html" type="html">
+<div>
+		<img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: 80px; width: auto;" t-att-alt="object.company_id.name"/>
+</div>
+<p>
+	Estimado <t t-out="object.customer_name"></t>,<br/><br/>
+	Se adjunta los documentos fiscales.<br/>
+	Factura: <t t-out="object.invoice_number"></t><br/>
+	Emitida a: <t t-out="object.customer_name"></t><br/>
+	Con CI/NIT: <t t-out="object.nit_ruc_nif"></t><br/>
+	Fecha: <t t-out="object.get_date_invoiced()"></t><br/>
+	Monto: <t t-out="object.get_total()"></t><br/>
+	Codigo Autorizacion: <span t-out="object.cuf"></span><br/><br/><br/>
+	Saludos Cordiales,<br/>
+</p>
+<div t-out="object.company_id.name"></div>
+		</field>
+	</record>
+	<record id="siat_invoice_void_email_template" model="mail.template">
+		<field name="name">SIAT INVOICE VOID EMAIL TEMPLATE</field>
+		<field name="model_id" ref="siat_module.model_siat_invoice"></field>
+		<field name="auto_delete" eval="True"/>
+		<field name="email_from">onixiait@gmail.com</field>
+		<field name="email_to">{{ object.get_customer().email }}</field>
+		<field name="subject">Factura Anulada - {{ object.company_id.name }}</field>
+		<field name="body_html" type="html">
+<div>
+		<img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: 80px; width: auto;" t-att-alt="object.company_id.name"/>
+</div>
+<p>
+	Estimado <t t-out="object.customer_name"></t>,<br/><br/>
+	Su factura fue anulada.<br/>
+	Nro. Factura: <t t-out="object.get_invoice_number()"></t><br/>
+	Motivo de Anulación: <t t-out="dict(object.fields_get(allfields=['void_reason'])['void_reason']['selection'])[object.void_reason]"></t><br/>
+	Monto: <t t-out="object.get_total()"></t><br/>
+	Fecha Anulacion: <t t-out="object.get_date_void()"></t><br/>
+	Codigo Autorizacion: <span t-out="object.cuf"></span><br/><br/><br/>
+	Saludos Cordiales,<br/>
+</p>
+<div t-out="object.company_id.name"></div>
+		</field>
+	</record>
+</odoo>
