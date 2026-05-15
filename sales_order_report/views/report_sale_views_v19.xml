@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- REPORTE PDF -->
+    <template id="report_saleorder_document_no_taxes"
+              inherit_id="sale.report_saleorder_document"
+              priority="99">
+
+        <xpath expr="//t[@t-set='hide_taxes_details']" position="replace">
+            <t t-set="hide_taxes_details" t-value="True"/>
+        </xpath>
+
+        <xpath expr="//td[@name='td_product_priceunit']" position="replace">
+            <td name="td_product_priceunit" class="text-end text-nowrap">
+                <t t-if="not collapse_prices">
+                    <t t-set="tax_computation_original"
+                       t-value="line.tax_ids.compute_all(
+                           line.price_unit,
+                           doc.currency_id,
+                           1.0,
+                           line.product_id,
+                           doc.partner_shipping_id
+                       )"/>
+                    <span t-if="line.discount"
+                          t-esc="tax_computation_original['total_included']"
+                          t-options='{"widget": "monetary", "display_currency": doc.currency_id}'
+                          style="text-decoration: line-through;"
+                          class="text-danger d-block"/>
+                    <t t-set="tax_computation_discounted"
+                       t-value="line.tax_ids.compute_all(
+                           line.price_unit * (1 - line.discount / 100),
+                           doc.currency_id,
+                           1.0,
+                           line.product_id,
+                           doc.partner_shipping_id
+                       )"/>
+                    <span t-esc="tax_computation_discounted['total_included']"
+                          t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                </t>
+            </td>
+        </xpath>
+
+        <xpath expr="//div[@name='so_total_summary']" position="replace">
+            <div class="clearfix" name="so_total_summary">
+                <div id="total" class="row mt-n3" name="total">
+                    <div class="col-6 ms-auto">
+                        <table class="o_total_table table table-borderless">
+                            <tr class="border-black o_total">
+                                <td><strong>Total</strong></td>
+                                <td class="text-end">
+                                    <span t-field="doc.amount_total"
+                                          t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+    <!-- VISTA WEB (PORTAL) -->
+    <template id="sale_order_portal_content_no_taxes"
+              inherit_id="sale.sale_order_portal_content"
+              priority="99">
+
+        <xpath expr="//div[@id='introduction']" position="before">
+            <style>
+                #taxes_header { display: none !important; }
+                td[name='td_product_taxes'],
+                td[name='td_combo_taxes'],
+                td[name='td_section_group_taxes'] { display: none !important; }
+            </style>
+        </xpath>
+
+        <xpath expr="//section[@id='details']//t[@t-set='hide_taxes_details']" position="replace">
+            <t t-set="hide_taxes_details" t-value="True"/>
+        </xpath>
+
+        <xpath expr="//td[@name='td_product_priceunit']" position="replace">
+            <td name="td_product_priceunit"
+                t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
+                <t t-if="not collapse_prices">
+                    <t t-set="tax_computation_original"
+                       t-value="line.tax_ids.compute_all(
+                           line.price_unit,
+                           sale_order.currency_id,
+                           1.0,
+                           line.product_id,
+                           sale_order.partner_shipping_id
+                       )"/>
+                    <span t-if="line.discount"
+                          t-esc="tax_computation_original['total_included']"
+                          t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'
+                          style="text-decoration: line-through;"
+                          class="text-danger d-block"/>
+                    <t t-set="tax_computation_discounted"
+                       t-value="line.tax_ids.compute_all(
+                           line.price_unit * (1 - line.discount / 100),
+                           sale_order.currency_id,
+                           1.0,
+                           line.product_id,
+                           sale_order.partner_shipping_id
+                       )"/>
+                    <span t-esc="tax_computation_discounted['total_included']"
+                          t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'/>
+                </t>
+            </td>
+        </xpath>
+
+        <xpath expr="//td[@name='td_product_discount']" position="replace">
+            <td name="td_product_discount"
+                t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
+                <t t-if="line.discount">
+                    <span t-esc="line.discount"/>%
+                </t>
+            </td>
+        </xpath>
+
+        <xpath expr="//div[@id='total'][@name='total']" position="replace">
+            <div id="total" name="total" style="page-break-inside: avoid;">
+                <div class="col-xs-7 col-md-5 ms-auto">
+                    <table class="table table-sm table-borderless">
+                        <tr class="border-black o_total">
+                            <td><strong>Total</strong></td>
+                            <td class="text-end">
+                                <span t-field="sale_order.amount_total"
+                                      t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>
