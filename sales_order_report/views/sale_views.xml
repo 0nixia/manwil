@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_date_editable" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.date.editable</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='order_details']/div[label[@for='date_order']]" position="attributes">
+                <attribute name="groups"/>
+            </xpath>
+
+            <xpath expr="//group[@name='order_details']//field[@name='date_order'][1]" position="attributes">
+                <attribute name="groups"/>
+                <attribute name="readonly">state == 'cancel'</attribute>
+            </xpath>
+
+            <xpath expr="//group[@name='order_details']//field[@name='date_order'][2]" position="attributes">
+                <attribute name="readonly">state == 'cancel'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
