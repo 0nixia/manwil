@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="siat_service_message_view_list" model="ir.ui.view">
+    <field name="name">siat.service_message.view.list</field>
+    <field name="model">siat.service_message</field>
+    <field name="arch" type="xml">
+      <list string="Mensajes Servicios" create="false" delete="false" duplicate="false">
+        <field name="code"/>
+        <field name="description" />
+        <field name="write_date" string="Fecha Actualización"/>
+      </list>
+    </field>
+  </record>
+  <record id="siat_service_message_view_list_extra" model="ir.ui.view">
+    <field name="name">siat.service_message.list.inherit</field>
+    <field name="model">siat.service_message</field>
+    <field name="inherit_id" ref="siat_module.siat_service_message_view_list"/>
+    <field name="arch" type="xml">
+        <xpath expr="//list" position="attributes">
+            <attribute name="js_class">button_in_list_sync</attribute>
+        </xpath>
+    </field>
+   </record>
+</odoo>

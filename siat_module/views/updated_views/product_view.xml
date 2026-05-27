@@ -1,0 +1,63 @@
+<odoo>
+    <record id="product_template_form_view_siat" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.siat</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales']" position="after">
+                <page name="siat-data" string="Homologación SIAT">
+                    <field name="siat_homologation_ids">
+                        <list editable="bottom">
+                            <field name="company_id"
+                                   groups="base.group_multi_company"/>
+                            <field name="siat_measure_id"
+                                   placeholder="Unidad de Medida"
+                                   options="{'no_create': True, 'no_create_edit': True}"
+                                   domain="[('company_id', '=', current_company_id)]"/>
+                            <field name="siat_activity_id"
+                                   placeholder="Actividad Económica"
+                                   options="{'no_create': True, 'no_create_edit': True}"
+                                   domain="[('company_id', '=', current_company_id)]"/>
+                            <field name="siat_activity_caeb" column_invisible="True"/>
+                            <field name="siat_prod_id"
+                                   placeholder="Código de Producto"
+                                   options="{'no_create': True, 'no_create_edit': True}"
+                                   domain="[
+                                       ('company_id', '=', current_company_id),
+                                       ('code', '=', siat_activity_caeb)
+                                   ]"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="product_product_pos_siat_inherit" model="ir.ui.view">
+        <field name="name">product.product.pos.siat.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="point_of_sale.product_product_view_form_normalized_pos"/>
+        <field name="arch" type="xml">
+            <field name="color" position="after">
+                <field name="company_id" invisible="1"/>
+                <field name="siat_measure_id"
+                    placeholder="Unidad de Medida"
+                    options="{'no_create': True, 'no_create_edit': True}"
+                    domain="[('company_id', '=', current_company_id)]"/>
+                <field name="siat_activity_id"
+                    placeholder="Actividad Económica"
+                    options="{'no_create': True, 'no_create_edit': True}"
+                    domain="[('company_id', '=', current_company_id)]"/>
+                <field name="siat_activity_caeb" invisible="1"/>
+                <field name="siat_prod_id"
+                    placeholder="Código de Producto"
+                    options="{'no_create': True, 'no_create_edit': True}"
+                    invisible="not siat_activity_id"
+                    domain="[
+                        ('company_id', '=', current_company_id),
+                        ('code', '=', siat_activity_caeb)
+                    ]"/>
+            </field>
+        </field>
+    </record>
+</odoo>

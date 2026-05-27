@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="siat_cufd_view_list" model="ir.ui.view">
+    <field name="name">siat.cufd.view.list</field>
+    <field name="model">siat.cufd_code</field>
+    <field name="arch" type="xml">
+      <list create="false" delete="false" duplicate="false">
+        <field name="cufd_code" />
+        <field name="control_code" />
+        <field name="point_of_sale_id" />
+        <field name="address" />
+        <field name="started_date" />
+        <field name="ended_date" />
+      </list>
+    </field>
+  </record>
+</odoo>

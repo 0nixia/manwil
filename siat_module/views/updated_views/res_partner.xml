@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="siat_view_partner_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.form.siat</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="readonly">
+                        is_special_siat_case and siat_special_case_type in ('99002', '99003')
+                    </attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='vat']" position="replace">
+                    <div colspan="2">
+                        <field name="document_type_code" invisible="1"/>
+                        <group col="2" class="o_group">
+                            <label for="is_special_siat_case" string="Caso Especial SIAT" class="o_form_label"/>
+                            <field name="is_special_siat_case" widget="boolean_toggle" nolabel="1"/>
+                            <label for="siat_special_case_type" string="Tipo de Caso Especial"
+                                class="o_form_label"
+                                invisible="not is_special_siat_case"/>
+                            <field name="siat_special_case_type"
+                                nolabel="1"
+                                invisible="not is_special_siat_case"
+                                placeholder="Seleccione el caso especial"/>
+                            <label for="vat" string="NIT (Regulación SIAT)"
+                                class="o_form_label fw-bold"
+                                invisible="not is_special_siat_case or not siat_special_case_type"/>
+                            <field name="vat"
+                                nolabel="1"
+                                readonly="1"
+                                force_save="1"
+                                invisible="not is_special_siat_case or not siat_special_case_type"/>
+                            <div colspan="2" class="text-muted fst-italic small"
+                                invisible="not is_special_siat_case or siat_special_case_type not in ('99001', '99002', '99003')">
+                                <div invisible="siat_special_case_type != '99001'">Art. 25-IV: Extranjeros, diplomáticos y organizaciones sin NIT boliviano.</div>
+                                <div invisible="siat_special_case_type != '99002'">Art. 25-V: Control Tributario. Nombre fijo: "Control Tributario".</div>
+                                <div invisible="siat_special_case_type != '99003'">Art. 25-VI: Ventas menores del día (precio &lt; Bs 5). Nombre fijo: "VENTAS MENORES DEL DÍA".</div>
+                            </div>
+                            <label for="document_type_id" string="Tipo de Documento"
+                                class="o_form_label fw-bold"
+                                invisible="is_special_siat_case"/>
+                            <field name="document_type_id"
+                                nolabel="1"
+                                invisible="is_special_siat_case"
+                                options="{'no_create': True, 'no_open': True}"
+                                placeholder="Seleccione tipo de documento"/>
+                            <label for="vat" string="Nro. Documento / NIT"
+                                class="o_form_label fw-bold"
+                                invisible="is_special_siat_case or document_type_code == '1'"/>
+                            <div class="o_row" invisible="is_special_siat_case or document_type_code == '1'">
+                                <field name="vat" placeholder="Ej.: 12345678" nolabel="1"/>
+                                <button name="nitValido"
+                                        type="object"
+                                        string="Verificar"
+                                        icon="fa-check"
+                                        class="btn-link"
+                                        invisible="document_type_code != '5'"/>
+                            </div>
+                            <label for="vat" string="Cédula de Identidad"
+                                class="o_form_label text-muted"
+                                invisible="is_special_siat_case or document_type_code != '1'"/>
+                            <div class="o_row" invisible="is_special_siat_case or document_type_code != '1'">
+                                <field name="vat" placeholder="Ej.: 12345678" nolabel="1"/>
+                                <field name="ci_complement" placeholder="Ej.: CB"/>
+                            </div>
+                        </group>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

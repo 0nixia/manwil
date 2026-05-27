@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="siat_invoice_labels_sector_view_list" model="ir.ui.view">
+    <field name="name">siat.invoice_label.view.list</field>
+    <field name="model">siat.invoice_label</field>
+    <field name="arch" type="xml">
+      <list string="Actividades Documento Sector" create="false" delete="false" duplicate="false">
+        <field name="code" />
+        <field name="description"/>
+        <field name="write_date" string="Fecha Actualización"/>
+      </list>
+    </field>
+  </record>
+  <record id="siat_invoice_labels_sector_view_list_extra" model="ir.ui.view">
+    <field name="name">siat.invoice_label.list.inherit</field>
+    <field name="model">siat.invoice_label</field>
+    <field name="inherit_id" ref="siat_module.siat_invoice_labels_sector_view_list"/>
+    <field name="arch" type="xml">
+        <xpath expr="//list" position="attributes">
+            <attribute name="js_class">button_in_list_sync</attribute>
+        </xpath>
+    </field>
+   </record>
+</odoo>

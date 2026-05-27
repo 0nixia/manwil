@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_config_settings_pos_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.point_of_sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='pos_payment_section']" position="before">
+                <block title="Configuración SIAT" id="pos_siat">
+
+                    <!-- Campo invisible requerido por Odoo 17: todo campo usado en
+                         modifier 'invisible' debe estar presente en la vista. -->
+                    <field name="siat_pos_configured" invisible="1"/>
+
+                    <!-- Aviso estilo Odoo: aparece cuando no hay siat.pos sincronizados.
+                         Mismo patrón que "There is no Chart of Accounts configured". -->
+                    <div class="alert alert-warning"
+                         role="alert"
+                         invisible="siat_pos_configured">
+                        No hay Puntos de Venta SIAT sincronizados.
+                        Por favor ve a
+                        <a type="action" name="%(siat_module.siat_pos_action)d" class="alert-link">
+                            SIAT → Puntos de Venta
+                        </a>
+                        y obtén el CUIS primero desde Ajustes generales.
+                    </div>
+
+                    <!-- Campo de selección: solo visible cuando ya hay siat.pos disponibles -->
+                    <setting string="Punto de Venta SIAT"
+                             help="Asocia este POS de Odoo con su Punto de Venta registrado en el SIAT."
+                             invisible="not siat_pos_configured">
+                        <field name="pos_siat_pos_id" />
+                    </setting>
+
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
