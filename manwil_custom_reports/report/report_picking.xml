@@ -235,8 +235,6 @@
                             <td class="sig">
                                 <div class="sig-line">
                                     <div class="sig-title">ELABORADO POR</div>
-                                    <div t-if="has_sale and o.sale_id.user_id" class="sig-name">(<span t-out="o.sale_id.user_id.name"/>)</div>
-                                    <div t-elif="o.user_id" class="sig-name">(<span t-out="o.user_id.name"/>)</div>
                                 </div>
                             </td>
                             <td class="sig">
