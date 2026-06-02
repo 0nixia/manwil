@@ -103,6 +103,19 @@ class Invoice(models.Model):
         else:
             return self.partner_id
 
+    def get_customer_code(self):
+        """Código de cliente para el reporte.
+
+        Muestra el 'Company ID' (campo company_registry, pestaña
+        Sales & Purchase → Misc) del cliente; si está vacío, cae al
+        NIT/VAT. getattr defensivo porque el cliente en modo facturador
+        (siat.client) puede no exponer esos campos.
+        """
+        customer = self.get_customer()
+        if not customer:
+            return ''
+        return getattr(customer, 'company_registry', '') or getattr(customer, 'vat', '') or ''
+
     def _compute_display_note(self):
         statuses = {
             siat_constants.InvoiceStatus.INVOICE_ISSUED:   'Emitida',

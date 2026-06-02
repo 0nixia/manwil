@@ -101,7 +101,7 @@
 					<div style="font-size: 9pt; font-weight: bold; line-height: 1.4;">Cod. Cliente:</div>
 				</td>
 				<td style="border: none; vertical-align: top; padding-top: 3pt;">
-					<div style="font-size: 9pt; line-height: 1.4;" t-field="siat_invoice.partner_id"></div>
+					<div style="font-size: 9pt; line-height: 1.4;" t-out="siat_invoice.get_customer_code()"></div>
 				</td>
 			</tr>
 			</table>
@@ -367,7 +367,7 @@
 										</span>
 									</td>
 									<td style="border: none; padding-left: 6px; vertical-align: top; line-height: 1.4;">
-										<span t-field="siat_invoice.partner_id"/>
+										<span t-out="siat_invoice.get_customer_code()"/>
 									</td>
 								</tr>
 								<tr>
