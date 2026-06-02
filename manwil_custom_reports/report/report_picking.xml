@@ -31,22 +31,19 @@
                         .manwil-doc { font-family: Arial, Helvetica, sans-serif; font-size: 9.5pt; color: #222; }
                         
                         /* ========================================= */
-                        /* ENCABEZADO CORREGIDO SEGÚN FOTO           */
+                        /* ENCABEZADO                                */
                         /* ========================================= */
                         .manwil-doc .header-table { width: 100%; margin-bottom: 15px; border-collapse: collapse;}
                         .manwil-doc .header-table td { vertical-align: top; }
                         
                         .manwil-doc .company-title { font-size: 14pt; font-weight: bold; color: #333; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; }
                         
-                        /* Razón y Concepto Apilados */
                         .manwil-doc .meta-block { font-size: 9pt; line-height: 1.2; margin-bottom: 6px; }
                         .manwil-doc .meta-block .lbl { font-weight: bold; color: #333; text-transform: uppercase; }
-                        .manwil-doc .meta-block .val { text-transform: uppercase; color: #444; } /* Tono grisáceo como la foto */
+                        .manwil-doc .meta-block .val { text-transform: uppercase; color: #444; }
                         
-                        /* Título más a la izquierda (Modificando anchos de columna en HTML) */
                         .manwil-doc .doc-title { font-size: 16pt; font-weight: 900; text-align: center; color: #222; letter-spacing: 0.5px; margin-top: 15px;}
                         
-                        /* User por fuera y caja redondeada abajo */
                         .manwil-doc .user-label { font-size: 9pt; color: #333; margin-bottom: 2px; padding-left: 5px; }
                         .manwil-doc .info-box { border: 1.2pt solid #222; border-radius: 6px; padding: 4px 8px; font-size: 9pt; }
                         .manwil-doc .info-box table { width: 100%; line-height: 1.4; border-collapse: collapse; }
@@ -54,31 +51,31 @@
                         .manwil-doc .info-box .lbl-bold { font-weight: bold; color: #333; }
                         
                         /* ========================================= */
-                        /* TABLA DE PRODUCTOS                        */
+                        /* TABLA DE PRODUCTOS (Sin líneas verticales)*/
                         /* ========================================= */
                         .manwil-doc .items-table { 
                             width: 100%; 
                             border-collapse: separate; 
                             border-spacing: 0; 
-                            border: 1pt solid #222; 
+                            border: 1.5px solid #222; /* Borde exterior de la tabla */
                             border-radius: 8px; 
                             margin-top: 15px;
                         }
                         .manwil-doc .items-table th, .manwil-doc .items-table td { 
-                            border-right: 0.5pt solid #222; 
-                            border-bottom: 0.5pt solid #222; 
+                            /* Solo conservamos el borde inferior para separar filas horizontalmente */
+                            border-bottom: 1px solid #222; 
                             padding: 6px 4px; 
-                            text-align: center;
+                            text-align: center; /* Contenido centrado */
                             vertical-align: middle;
                         }
                         .manwil-doc .items-table th { font-weight: bold; font-size: 9.5pt; }
                         .manwil-doc .items-table td { font-size: 9pt; }
                         
-                        .manwil-doc .items-table th:last-child, .manwil-doc .items-table td:last-child { border-right: none; }
-                        .manwil-doc .items-table tr:last-child td { border-bottom: none; }
+                        /* Eliminamos el borde inferior de la última fila para que no choque con el borde redondeado */
+                        .manwil-doc .items-table tbody tr:last-child td { border-bottom: none; }
                         
-                        .manwil-doc .items-table td.left { text-align: left; }
-                        .manwil-doc .items-table td.right { text-align: right; }
+                        /* Excepción: Si deseas que la descripción vaya a la izquierda como en la foto */
+                        .manwil-doc .items-table td.desc-left { text-align: left; }
                         
                         /* ========================================= */
                         /* SECCIÓN INFERIOR                          */
@@ -87,7 +84,7 @@
                         
                         .manwil-doc .customer-info { font-size: 9.5pt; line-height: 1.6; text-transform: uppercase; }
                         
-                        .manwil-doc .totals-box { width: 100%; border-collapse: collapse; border: 1pt solid #222; }
+                        .manwil-doc .totals-box { width: 100%; border-collapse: collapse; border: 1.5px solid #222; }
                         .manwil-doc .totals-box td { padding: 4px 8px; border: none; font-size: 9.5pt;}
                         .manwil-doc .totals-box td.lbl { text-align: right; font-weight: bold; color: #333; }
                         .manwil-doc .totals-box td.val { text-align: right; width: 35%; color: #222; }
@@ -104,26 +101,20 @@
                     <!-- ===== ENCABEZADO ===== -->
                     <table class="header-table">
                         <tr>
-                            <!-- Columna 1 ajustada a 35% para mover el título a la izquierda -->
                             <td style="width: 35%;">
                                 <div class="company-title">
                                     <span t-field="o.company_id.name"/>
                                 </div>
-                                
-                                <!-- Razón apilada -->
                                 <div class="meta-block">
                                     <div class="lbl">RAZÓN:</div>
                                     <div class="val"><span t-out="o.picking_type_id.name or ''"/></div>
                                 </div>
-                                
-                                <!-- Concepto apilado -->
                                 <div class="meta-block">
                                     <div class="lbl">CONCEPTO:</div>
                                     <div class="val"><span t-out="o.partner_id.name or ''"/></div>
                                 </div>
                             </td>
                             
-                            <!-- Columna 2 ajustada a 40% (El título queda más centrado a la izquierda) -->
                             <td style="width: 40%; vertical-align: top;">
                                 <div class="doc-title">
                                     <t t-if="is_in">NOTA DE INGRESO</t>
@@ -131,14 +122,10 @@
                                 </div>
                             </td>
                             
-                            <!-- Columna 3 ajustada a 25% -->
                             <td style="width: 25%;">
-                                <!-- Texto de User Fuera de la Caja -->
                                 <div class="user-label">
-                                    User: <span style="margin-left: 4px;" t-out="o.user_id.name or ''"/>
+                                    Responsable: <span style="margin-left: 4px;" t-out="o.user_id.name or ''"/>
                                 </div>
-                                
-                                <!-- Caja contenedora de NRO, Fecha, Hora -->
                                 <div class="info-box">
                                     <table>
                                         <tr>
@@ -170,7 +157,7 @@
                         <thead>
                             <tr>
                                 <th style="width:12%;">codigo</th>
-                                <th class="left">Descripcion</th>
+                                <th>Descripcion</th>
                                 <th style="width:8%;">Cantidad</th>
                                 <th style="width:8%;">Unidad</th>
                                 <t t-if="has_sale">
@@ -185,14 +172,15 @@
                             <tr t-foreach="info.get('lines') or []" t-as="line">
                                 <t t-set="p" t-value="line.get('prices')"/>
                                 <td><span t-out="line.get('codigo')"/></td>
-                                <td class="left"><span t-out="line.get('descripcion')"/></td>
-                                <td class="right"><span t-out="line.get('cantidad')"/></td>
+                                <!-- He forzado la descripción a la izquierda como se ve en la foto, el resto centrado -->
+                                <td class="desc-left"><span t-out="line.get('descripcion')"/></td>
+                                <td><span t-out="line.get('cantidad')"/></td>
                                 <td><span t-out="line.get('unidad')"/></td>
                                 <t t-if="has_sale">
-                                    <td class="right"><span t-if="p" t-out="'%.2f' % p.get('pu')"/></td>
-                                    <td class="right"><span t-if="p" t-out="'%.2f' % p.get('precio')"/></td>
-                                    <td class="right"><span t-if="p" t-out="'%.2f' % p.get('descuento')"/></td>
-                                    <td class="right"><span t-if="p" t-out="'%.2f' % p.get('total')"/></td>
+                                    <td><span t-if="p" t-out="'%.2f' % p.get('pu')"/></td>
+                                    <td><span t-if="p" t-out="'%.2f' % p.get('precio')"/></td>
+                                    <td><span t-if="p" t-out="'%.2f' % p.get('descuento')"/></td>
+                                    <td><span t-if="p" t-out="'%.2f' % p.get('total')"/></td>
                                 </t>
                             </tr>
                         </tbody>
@@ -201,13 +189,14 @@
                     <!-- ===== SECCIÓN INFERIOR ===== -->
                     <table class="bottom-section">
                         <tr>
+                            <!-- Textos a la izquierda (A Cuenta, Preventista, Dirección) -->
                             <td style="width: 55%; vertical-align: top; padding-top: 5px;">
                                 <div class="customer-info">
-                                    <div t-if="has_sale">PREVENTISTA: <span t-out="o.sale_id.user_id.name or ''"/></div>
-                                    <div style="margin-top: 10px;">DIRECCION CLIENTE: <span t-out="o.partner_id.contact_address or ''"/></div>
+                                    <div>DIRECCION CLIENTE: <span t-out="o.partner_id.contact_address or ''"/></div>
                                 </div>
                             </td>
                             
+                            <!-- Caja de Totales a la derecha -->
                             <td style="width: 45%; vertical-align: top;">
                                 <t t-if="has_sale">
                                     <table class="totals-box">
@@ -229,14 +218,18 @@
                         </tr>
                     </table>
 
-                    <!-- ===== FIRMAS (2 Columnas) ===== -->
+                    <!-- ===== FIRMAS ===== -->
                     <table class="signatures">
                         <tr>
-                            <!-- Firma Izquierda -->
                             <td>
                                 <div class="line">ELABORADO POR</div>
+                                <div t-if="has_sale and o.sale_id.user_id" style="margin-top: 5px;">
+                                    (<span t-out="o.sale_id.user_id.name"/>)
+                                </div>
+                                <div t-elif="o.user_id" style="margin-top: 5px;">
+                                    (<span t-out="o.user_id.name"/>)
+                                </div>
                             </td>
-                            <!-- Firma Derecha -->
                             <td>
                                 <div class="top-text">VENTA ALMACEN</div>
                                 <div class="line">RECIBIDO</div>
