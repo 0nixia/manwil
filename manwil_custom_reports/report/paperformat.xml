@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Media Carta Horizontal (Half-Letter Landscape): 216 mm ancho x 140 mm alto.
+        format='custom' es obligatorio para que page_width/page_height tengan efecto.
+
+        NOTA IMPORTANTE sobre la orientación: wkhtmltopdf INTERCAMBIA ancho/alto
+        cuando orientation='Landscape'. Por eso, para obtener la hoja física
+        horizontal real (216 ancho x 140 alto) declaramos las dimensiones
+        literales con orientation='Portrait' (sin intercambio). El resultado es
+        una página de 216 mm de ancho x 140 mm de alto = Media Carta Horizontal.
+        Cabecera/pie de Odoo desactivados.
+    -->
+    <record id="paperformat_media_carta_landscape" model="report.paperformat">
+        <field name="name">Media Carta Horizontal (Manwil)</field>
+        <field name="default" eval="False"/>
+        <field name="format">custom</field>
+        <field name="page_width">216</field>
+        <field name="page_height">140</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+</odoo>

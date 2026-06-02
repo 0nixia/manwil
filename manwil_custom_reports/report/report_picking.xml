@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============ ACCIÓN DE REPORTE ============ -->
+    <record id="action_report_manwil_picking" model="ir.actions.report">
+        <field name="name">Nota de Almacén (Media Carta)</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">manwil_custom_reports.report_manwil_picking_document</field>
+        <field name="report_file">manwil_custom_reports.report_manwil_picking_document</field>
+        <field name="paperformat_id" ref="manwil_custom_reports.paperformat_media_carta_landscape"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- ============ PLANTILLA QWEB ============ -->
+    <template id="report_manwil_picking_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+              <div class="article"
+                   t-att-data-oe-model="o and o._name"
+                   t-att-data-oe-id="o and o.id"
+                   t-att-data-oe-lang="o and o.env.context.get('lang')">
+                
+                <t t-set="is_in" t-value="o.picking_type_id.code == 'incoming'"/>
+                <t t-set="info" t-value="info_map.get(o.id, {})"/>
+                <t t-set="has_sale" t-value="info.get('has_sale')"/>
+                
+                <div class="page manwil-doc">
+                    <style>
+                        .manwil-doc { font-family: Arial, Helvetica, sans-serif; font-size: 9.5pt; color: #222; }
+                        
+                        /* ========================================= */
+                        /* ENCABEZADO CORREGIDO SEGÚN FOTO           */
+                        /* ========================================= */
+                        .manwil-doc .header-table { width: 100%; margin-bottom: 15px; border-collapse: collapse;}
+                        .manwil-doc .header-table td { vertical-align: top; }
+                        
+                        .manwil-doc .company-title { font-size: 14pt; font-weight: bold; color: #333; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; }
+                        
+                        /* Razón y Concepto Apilados */
+                        .manwil-doc .meta-block { font-size: 9pt; line-height: 1.2; margin-bottom: 6px; }
+                        .manwil-doc .meta-block .lbl { font-weight: bold; color: #333; text-transform: uppercase; }
+                        .manwil-doc .meta-block .val { text-transform: uppercase; color: #444; } /* Tono grisáceo como la foto */
+                        
+                        /* Título más a la izquierda (Modificando anchos de columna en HTML) */
+                        .manwil-doc .doc-title { font-size: 16pt; font-weight: 900; text-align: center; color: #222; letter-spacing: 0.5px; margin-top: 15px;}
+                        
+                        /* User por fuera y caja redondeada abajo */
+                        .manwil-doc .user-label { font-size: 9pt; color: #333; margin-bottom: 2px; padding-left: 5px; }
+                        .manwil-doc .info-box { border: 1.2pt solid #222; border-radius: 6px; padding: 4px 8px; font-size: 9pt; }
+                        .manwil-doc .info-box table { width: 100%; line-height: 1.4; border-collapse: collapse; }
+                        .manwil-doc .info-box td { padding: 1px 0; }
+                        .manwil-doc .info-box .lbl-bold { font-weight: bold; color: #333; }
+                        
+                        /* ========================================= */
+                        /* TABLA DE PRODUCTOS                        */
+                        /* ========================================= */
+                        .manwil-doc .items-table { 
+                            width: 100%; 
+                            border-collapse: separate; 
+                            border-spacing: 0; 
+                            border: 1pt solid #222; 
+                            border-radius: 8px; 
+                            margin-top: 15px;
+                        }
+                        .manwil-doc .items-table th, .manwil-doc .items-table td { 
+                            border-right: 0.5pt solid #222; 
+                            border-bottom: 0.5pt solid #222; 
+                            padding: 6px 4px; 
+                            text-align: center;
+                            vertical-align: middle;
+                        }
+                        .manwil-doc .items-table th { font-weight: bold; font-size: 9.5pt; }
+                        .manwil-doc .items-table td { font-size: 9pt; }
+                        
+                        .manwil-doc .items-table th:last-child, .manwil-doc .items-table td:last-child { border-right: none; }
+                        .manwil-doc .items-table tr:last-child td { border-bottom: none; }
+                        
+                        .manwil-doc .items-table td.left { text-align: left; }
+                        .manwil-doc .items-table td.right { text-align: right; }
+                        
+                        /* ========================================= */
+                        /* SECCIÓN INFERIOR                          */
+                        /* ========================================= */
+                        .manwil-doc .bottom-section { width: 100%; margin-top: 15px; border-collapse: collapse; }
+                        
+                        .manwil-doc .customer-info { font-size: 9.5pt; line-height: 1.6; text-transform: uppercase; }
+                        
+                        .manwil-doc .totals-box { width: 100%; border-collapse: collapse; border: 1pt solid #222; }
+                        .manwil-doc .totals-box td { padding: 4px 8px; border: none; font-size: 9.5pt;}
+                        .manwil-doc .totals-box td.lbl { text-align: right; font-weight: bold; color: #333; }
+                        .manwil-doc .totals-box td.val { text-align: right; width: 35%; color: #222; }
+                        
+                        /* ========================================= */
+                        /* FIRMAS                                    */
+                        /* ========================================= */
+                        .manwil-doc .signatures { width: 100%; margin-top: 60px; page-break-inside: avoid; border-collapse: collapse; }
+                        .manwil-doc .signatures td { width: 50%; text-align: center; vertical-align: bottom; padding: 0 12%; }
+                        .manwil-doc .signatures .top-text { font-size: 9pt; text-transform: uppercase; margin-bottom: 5px; color: #111; }
+                        .manwil-doc .signatures .line { border-top: 1pt solid #111; padding-top: 6px; font-weight: bold; font-size: 10pt; text-transform: uppercase; }
+                    </style>
+
+                    <!-- ===== ENCABEZADO ===== -->
+                    <table class="header-table">
+                        <tr>
+                            <!-- Columna 1 ajustada a 35% para mover el título a la izquierda -->
+                            <td style="width: 35%;">
+                                <div class="company-title">
+                                    <span t-field="o.company_id.name"/>
+                                </div>
+                                
+                                <!-- Razón apilada -->
+                                <div class="meta-block">
+                                    <div class="lbl">RAZÓN:</div>
+                                    <div class="val"><span t-out="o.picking_type_id.name or ''"/></div>
+                                </div>
+                                
+                                <!-- Concepto apilado -->
+                                <div class="meta-block">
+                                    <div class="lbl">CONCEPTO:</div>
+                                    <div class="val"><span t-out="o.partner_id.name or ''"/></div>
+                                </div>
+                            </td>
+                            
+                            <!-- Columna 2 ajustada a 40% (El título queda más centrado a la izquierda) -->
+                            <td style="width: 40%; vertical-align: top;">
+                                <div class="doc-title">
+                                    <t t-if="is_in">NOTA DE INGRESO</t>
+                                    <t t-else="">NOTA DE SALIDA</t>
+                                </div>
+                            </td>
+                            
+                            <!-- Columna 3 ajustada a 25% -->
+                            <td style="width: 25%;">
+                                <!-- Texto de User Fuera de la Caja -->
+                                <div class="user-label">
+                                    User: <span style="margin-left: 4px;" t-out="o.user_id.name or ''"/>
+                                </div>
+                                
+                                <!-- Caja contenedora de NRO, Fecha, Hora -->
+                                <div class="info-box">
+                                    <table>
+                                        <tr>
+                                            <td class="lbl-bold">NRO:</td>
+                                            <td style="text-align: right;"><span t-field="o.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl-bold">Fecha:</td>
+                                            <td style="text-align: right;">
+                                                <span t-if="o.date_done" t-field="o.date_done" t-options="{'format': 'dd/MM/yyyy'}"/>
+                                                <span t-elif="o.scheduled_date" t-field="o.scheduled_date" t-options="{'format': 'dd/MM/yyyy'}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl-bold">Hora:</td>
+                                            <td style="text-align: right;">
+                                                <span t-if="o.date_done" t-field="o.date_done" t-options="{'format': 'HH:mm:ss'}"/>
+                                                <span t-elif="o.scheduled_date" t-field="o.scheduled_date" t-options="{'format': 'HH:mm:ss'}"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ===== TABLA DE PRODUCTOS ===== -->
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th style="width:12%;">codigo</th>
+                                <th class="left">Descripcion</th>
+                                <th style="width:8%;">Cantidad</th>
+                                <th style="width:8%;">Unidad</th>
+                                <t t-if="has_sale">
+                                    <th style="width:11%;">P.U.</th>
+                                    <th style="width:11%;">Precio</th>
+                                    <th style="width:10%;">Descto.</th>
+                                    <th style="width:12%;">Total</th>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="info.get('lines') or []" t-as="line">
+                                <t t-set="p" t-value="line.get('prices')"/>
+                                <td><span t-out="line.get('codigo')"/></td>
+                                <td class="left"><span t-out="line.get('descripcion')"/></td>
+                                <td class="right"><span t-out="line.get('cantidad')"/></td>
+                                <td><span t-out="line.get('unidad')"/></td>
+                                <t t-if="has_sale">
+                                    <td class="right"><span t-if="p" t-out="'%.2f' % p.get('pu')"/></td>
+                                    <td class="right"><span t-if="p" t-out="'%.2f' % p.get('precio')"/></td>
+                                    <td class="right"><span t-if="p" t-out="'%.2f' % p.get('descuento')"/></td>
+                                    <td class="right"><span t-if="p" t-out="'%.2f' % p.get('total')"/></td>
+                                </t>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- ===== SECCIÓN INFERIOR ===== -->
+                    <table class="bottom-section">
+                        <tr>
+                            <td style="width: 55%; vertical-align: top; padding-top: 5px;">
+                                <div class="customer-info">
+                                    <div t-if="has_sale">PREVENTISTA: <span t-out="o.sale_id.user_id.name or ''"/></div>
+                                    <div style="margin-top: 10px;">DIRECCION CLIENTE: <span t-out="o.partner_id.contact_address or ''"/></div>
+                                </div>
+                            </td>
+                            
+                            <td style="width: 45%; vertical-align: top;">
+                                <t t-if="has_sale">
+                                    <table class="totals-box">
+                                        <tr>
+                                            <td class="lbl">Sub Total:</td>
+                                            <td class="val"><span t-out="'%.2f' % (info.get('sub_total') or 0.0)"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl">Total Descuento:</td>
+                                            <td class="val"><span t-out="'%.2f' % (info.get('descuento') or 0.0)"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl" style="font-weight: 900;">Total:</td>
+                                            <td class="val" style="font-weight: 900;"><span t-out="'%.2f' % (info.get('total') or 0.0)"/></td>
+                                        </tr>
+                                    </table>
+                                </t>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ===== FIRMAS (2 Columnas) ===== -->
+                    <table class="signatures">
+                        <tr>
+                            <!-- Firma Izquierda -->
+                            <td>
+                                <div class="line">ELABORADO POR</div>
+                            </td>
+                            <!-- Firma Derecha -->
+                            <td>
+                                <div class="top-text">VENTA ALMACEN</div>
+                                <div class="line">RECIBIDO</div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+              </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>
