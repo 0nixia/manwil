@@ -20,6 +20,7 @@ instalado, los reportes se autoadaptan sin fallar.
         'report/paperformat.xml',
         'report/report_picking.xml',
         'report/report_invoice.xml',
+        'views/stock_picking_views.xml',
     ],
     'installable': True,
     'application': False,
