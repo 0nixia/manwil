@@ -197,7 +197,7 @@
                             <!-- Textos a la izquierda (A Cuenta, Preventista, Dirección) -->
                             <td style="width: 55%; vertical-align: top; padding-top: 5px;">
                                 <div class="customer-info">
-                                    <div>DIRECCION CLIENTE: <span t-out="o.partner_id.contact_address or ''"/></div>
+                                    <div t-if="not is_in">DIRECCION CLIENTE: <span t-out="o.partner_id.contact_address or ''"/></div>
                                 </div>
                             </td>
                             
