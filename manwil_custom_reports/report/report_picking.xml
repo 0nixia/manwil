@@ -235,8 +235,8 @@
                             <td class="sig">
                                 <div class="sig-line">
                                     <div class="sig-title">ELABORADO POR</div>
-                                    <div class="sig-name" t-if="o.user_id">
-                                        (<span t-out="o.user_id.name"/>)
+                                    <div class="sig-name" t-if="o.create_uid">
+                                        (<span t-out="o.create_uid.name"/>)
                                     </div>
                                 </div>
                             </td>
