@@ -262,7 +262,7 @@ class SiatAccountMove(models.Model):
         partner = to_post.partner_id
         amount  = round(
             float_round(
-                to_post.amount_untaxed,
+                to_post.amount_total,
                 precision_digits=2,
                 rounding_method="HALF-EVEN",
             ),
@@ -310,13 +310,12 @@ class SiatAccountMove(models.Model):
             qty = float_round(
                 line.quantity, precision_digits=2, rounding_method="HALF-EVEN"
             )
-            subtotal_line = round(
+            price_neto = round(
                 float_round(
-                    line.price_subtotal, precision_digits=2, rounding_method="HALF-EVEN"
+                    line.price_unit, precision_digits=2, rounding_method="HALF-EVEN"
                 ),
                 2,
             )
-            price_neto = round(subtotal_line / qty, 2) if qty else 0.0
             invoiceData["items"].append({
                 "product_id":          line.product_id.id,
                 "product_code":        line.product_id.default_code or line.product_id.barcode or str(line.product_id.id),
