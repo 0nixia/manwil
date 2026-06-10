@@ -148,7 +148,7 @@
                          de ellas tiene bordes visibles intencionales -->
                     <table class="header-table table-clean" border="0" style="border: 0 !important;">
                         <tr>
-                            <td style="width:42%;">
+                            <td style="width:42%; border: none !important; box-shadow: none !important;">
                                 <!-- Tabla interna: logo + nombre empresa -->
                                 <table class="table-clean" style="width: 100%;">
                                     <tr>
@@ -170,13 +170,13 @@
                                     </tr>
                                 </table>
                             </td>
-                            <td style="width:23%; text-align: center;">
+                            <td style="width:23%; text-align: center; border: none !important; box-shadow: none !important;">
                                 <div class="doc-title">
                                     FACTURA
                                     <small>(Con Derecho a Crédito Fiscal)</small>
                                 </div>
                             </td>
-                            <td style="width:35%;">
+                            <td style="width:35%; border: none !important; box-shadow: none !important;">
                                 <div class="fiscal">
                                     <!-- Tabla interna del recuadro fiscal: el borde está en .fiscal
                                          (el div), no en la tabla; la tabla en sí no necesita bordes -->

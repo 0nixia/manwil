@@ -52,8 +52,8 @@
                         /* ========================================= */
                         /* ENCABEZADO                                */
                         /* ========================================= */
-                        .manwil-doc .header-table { width: 100%; margin-bottom: 15px; border-collapse: separate; border: 0 !important; }
-                        .manwil-doc .header-table td { vertical-align: top; border: 0 !important; }
+                        .manwil-doc .header-table { width: 100%; margin-bottom: 15px; border-collapse: separate; border: none !important; }
+                        .manwil-doc .header-table td { vertical-align: top; border: none !important; box-shadow: none !important; }
 
                         .manwil-doc .company-title { font-size: 14pt; font-weight: bold; color: #333; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; }
 
@@ -64,8 +64,8 @@
                         .manwil-doc .doc-title { font-size: 16pt; font-weight: 900; text-align: center; color: #222; letter-spacing: 0.5px; margin-top: 15px; }
 
                         .manwil-doc .user-label { font-size: 9pt; color: #333; margin-bottom: 2px; padding-left: 5px; }
-                        .manwil-doc .info-box { padding: 4px 8px; font-size: 9pt; }
-                        .manwil-doc .info-box table { width: 100%; line-height: 1.4; border-collapse: collapse; }
+                        .manwil-doc .info-box { padding: 4px 8px; font-size: 9pt; border: none !important; box-shadow: none !important; }
+                        .manwil-doc .info-box table { width: 100%; line-height: 1.4; border-collapse: collapse; border: none !important; }
                         .manwil-doc .info-box td { padding: 1px 0; }
                         .manwil-doc .info-box .lbl-bold { font-weight: bold; color: #333; }
 
@@ -137,9 +137,9 @@
                     <!-- ===== ENCABEZADO ===== -->
                     <!-- table-clean: esta tabla no tiene bordes intencionales; Bootstrap
                          añade border-color en td con border-collapse:collapse → líneas fantasma -->
-                    <table class="header-table table-clean" border="0" style="border: 0 !important;">
+                    <table class="header-table table-clean">
                         <tr>
-                            <td style="width: 35%;">
+                            <td style="width: 35%; border: none !important; box-shadow: none !important;">
                                 <div class="company-title">
                                     <span t-field="o.company_id.name"/>
                                 </div>
@@ -153,18 +153,18 @@
                                 </div>
                             </td>
 
-                            <td style="width: 40%; vertical-align: top;">
+                            <td style="width: 40%; vertical-align: top; border: none !important; box-shadow: none !important;">
                                 <div class="doc-title">
                                     <t t-if="is_in">NOTA DE INGRESO</t>
                                     <t t-else="">NOTA DE SALIDA</t>
                                 </div>
                             </td>
 
-                            <td style="width: 25%;">
+                            <td style="width: 25%; border: none !important;">
                                 <div class="user-label">
                                     Responsable: <span style="margin-left: 4px;" t-out="o.user_id.name or ''"/>
                                 </div>
-                                <div class="info-box">
+                                <div class="info-box" style="border: none !important; box-shadow: none !important;">
                                     <!-- table-clean: tabla interna del recuadro NRO/Fecha/Hora -->
                                     <table class="table-clean">
                                         <tr>
