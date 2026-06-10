@@ -21,82 +21,116 @@
                    t-att-data-oe-model="o and o._name"
                    t-att-data-oe-id="o and o.id"
                    t-att-data-oe-lang="o and o.env.context.get('lang')">
-                
+
                 <t t-set="is_in" t-value="o.picking_type_id.code == 'incoming'"/>
                 <t t-set="info" t-value="info_map.get(o.id, {})"/>
                 <t t-set="has_sale" t-value="info.get('has_sale')"/>
-                
+
                 <div class="page manwil-doc">
                     <style>
                         .manwil-doc { font-family: Arial, Helvetica, sans-serif; font-size: 9.5pt; color: #222; }
-                        
+
+                        /* ========================================= */
+                        /* TABLA-LIMPIA: elimina bordes Bootstrap    */
+                        /* Aplica a tablas sin bordes visibles para  */
+                        /* evitar líneas fantasma en Windows/Chrome  */
+                        /* ========================================= */
+                        .table-clean,
+                        .table-clean tr,
+                        .table-clean th,
+                        .table-clean td {
+                            border: 0 !important;
+                            border-top: 0 !important;
+                            border-bottom: 0 !important;
+                            border-left: 0 !important;
+                            border-right: 0 !important;
+                            box-shadow: none !important;
+                        }
+                        .border-top-black    { border-top: 1px solid black !important; }
+                        .border-bottom-black { border-bottom: 1px solid black !important; }
+
                         /* ========================================= */
                         /* ENCABEZADO                                */
                         /* ========================================= */
-                        .manwil-doc .header-table { width: 100%; margin-bottom: 15px; border-collapse: collapse;}
+                        .manwil-doc .header-table { width: 100%; margin-bottom: 15px; border-collapse: collapse; }
                         .manwil-doc .header-table td { vertical-align: top; }
-                        
+
                         .manwil-doc .company-title { font-size: 14pt; font-weight: bold; color: #333; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; }
-                        
+
                         .manwil-doc .meta-block { font-size: 9pt; line-height: 1.2; margin-bottom: 6px; }
                         .manwil-doc .meta-block .lbl { font-weight: bold; color: #333; text-transform: uppercase; }
                         .manwil-doc .meta-block .val { text-transform: uppercase; color: #444; }
-                        
-                        .manwil-doc .doc-title { font-size: 16pt; font-weight: 900; text-align: center; color: #222; letter-spacing: 0.5px; margin-top: 15px;}
-                        
+
+                        .manwil-doc .doc-title { font-size: 16pt; font-weight: 900; text-align: center; color: #222; letter-spacing: 0.5px; margin-top: 15px; }
+
                         .manwil-doc .user-label { font-size: 9pt; color: #333; margin-bottom: 2px; padding-left: 5px; }
                         .manwil-doc .info-box { border: 1.2pt solid #222; border-radius: 6px; padding: 4px 8px; font-size: 9pt; }
                         .manwil-doc .info-box table { width: 100%; line-height: 1.4; border-collapse: collapse; }
                         .manwil-doc .info-box td { padding: 1px 0; }
                         .manwil-doc .info-box .lbl-bold { font-weight: bold; color: #333; }
-                        
+
                         /* ========================================= */
                         /* TABLA DE PRODUCTOS (Sin líneas verticales)*/
                         /* ========================================= */
-                        .manwil-doc .items-table { 
-                            width: 100%; 
-                            border-collapse: separate; 
-                            border-spacing: 0; 
-                            border: 1.5px solid #222; /* Borde exterior de la tabla */
-                            border-radius: 8px; 
+                        .manwil-doc .items-table {
+                            width: 100%;
+                            border-collapse: separate;
+                            border-spacing: 0;
+                            border: 1.5px solid #222 !important;
+                            border-radius: 8px;
                             margin-top: 15px;
                         }
-                        .manwil-doc .items-table th, .manwil-doc .items-table td { 
-                            /* Solo conservamos el borde inferior para separar filas horizontalmente */
-                            border-bottom: 1px solid #222; 
-                            padding: 6px 4px; 
-                            text-align: center; /* Contenido centrado */
+                        /* Resetear bordes Bootstrap en filas y celdas, luego re-aplicar sólo el
+                           borde inferior deseado con !important para que no se filtre nada. */
+                        .manwil-doc .items-table tr {
+                            border: 0 !important;
+                            box-shadow: none !important;
+                        }
+                        .manwil-doc .items-table th,
+                        .manwil-doc .items-table td {
+                            border: 0 !important;
+                            border-bottom: 1px solid #222 !important;
+                            box-shadow: none !important;
+                            padding: 6px 4px;
+                            text-align: center;
                             vertical-align: middle;
                         }
                         .manwil-doc .items-table th { font-weight: bold; font-size: 9.5pt; }
                         .manwil-doc .items-table td { font-size: 9pt; }
-                        
-                        /* Eliminamos el borde inferior de la última fila para que no choque con el borde redondeado */
-                        .manwil-doc .items-table tbody tr:last-child td { border-bottom: none; }
-                        
-                        /* Excepción: Si deseas que la descripción vaya a la izquierda como en la foto */
+
+                        /* Eliminar borde inferior en la última fila */
+                        .manwil-doc .items-table tbody tr:last-child td {
+                            border-bottom: none !important;
+                        }
                         .manwil-doc .items-table td.desc-left { text-align: left; }
-                        
+
                         /* ========================================= */
                         /* SECCIÓN INFERIOR                          */
                         /* ========================================= */
                         .manwil-doc .bottom-section { width: 100%; margin-top: 15px; border-collapse: collapse; }
-                        
+
                         .manwil-doc .customer-info { font-size: 9.5pt; line-height: 1.6; text-transform: uppercase; }
-                        
-                        .manwil-doc .totals-box { width: 100%; border-collapse: collapse; border: 1.5px solid #222; }
-                        .manwil-doc .totals-box td { padding: 4px 8px; border: none; font-size: 9.5pt;}
+
+                        .manwil-doc .totals-box { width: 100%; border-collapse: collapse; border: 1.5px solid #222 !important; }
+                        .manwil-doc .totals-box tr {
+                            border: 0 !important;
+                            box-shadow: none !important;
+                        }
+                        .manwil-doc .totals-box td {
+                            padding: 4px 8px;
+                            border: 0 !important;
+                            box-shadow: none !important;
+                            font-size: 9.5pt;
+                        }
                         .manwil-doc .totals-box td.lbl { text-align: right; font-weight: bold; color: #333; }
                         .manwil-doc .totals-box td.val { text-align: right; width: 35%; color: #222; }
-                        
+
                         /* ========================================= */
                         /* FIRMAS                                    */
                         /* ========================================= */
                         .manwil-doc .signatures { width: 100%; margin-top: 60px; page-break-inside: avoid; border-collapse: collapse; }
                         .manwil-doc .signatures td { width: 50%; text-align: center; }
-                        /* Fila 1: texto sobre la línea, altura fija e igual en ambos lados */
                         .manwil-doc .signatures td.above { height: 20px; vertical-align: bottom; font-size: 9pt; font-weight: bold; text-transform: uppercase; color: #111; padding-bottom: 4px; }
-                        /* Fila 2: las líneas (mismo tr ⇒ border-top alineado) */
                         .manwil-doc .signatures td.sig { vertical-align: top; }
                         .manwil-doc .signatures .sig-line { border-top: 1pt solid #111; width: 220px; margin: 0 auto; padding-top: 6px; }
                         .manwil-doc .signatures .sig-title { font-weight: bold; font-size: 10pt; text-transform: uppercase; }
@@ -104,7 +138,9 @@
                     </style>
 
                     <!-- ===== ENCABEZADO ===== -->
-                    <table class="header-table">
+                    <!-- table-clean: esta tabla no tiene bordes intencionales; Bootstrap
+                         añade border-color en td con border-collapse:collapse → líneas fantasma -->
+                    <table class="header-table table-clean">
                         <tr>
                             <td style="width: 35%;">
                                 <div class="company-title">
@@ -119,20 +155,21 @@
                                     <div class="val"><span t-out="o.partner_id.name or ''"/></div>
                                 </div>
                             </td>
-                            
+
                             <td style="width: 40%; vertical-align: top;">
                                 <div class="doc-title">
                                     <t t-if="is_in">NOTA DE INGRESO</t>
                                     <t t-else="">NOTA DE SALIDA</t>
                                 </div>
                             </td>
-                            
+
                             <td style="width: 25%;">
                                 <div class="user-label">
                                     Responsable: <span style="margin-left: 4px;" t-out="o.user_id.name or ''"/>
                                 </div>
                                 <div class="info-box">
-                                    <table>
+                                    <!-- table-clean: tabla interna del recuadro NRO/Fecha/Hora -->
+                                    <table class="table-clean">
                                         <tr>
                                             <td class="lbl-bold">NRO:</td>
                                             <td style="text-align: right;"><span t-field="o.name"/></td>
@@ -158,6 +195,9 @@
                     </table>
 
                     <!-- ===== TABLA DE PRODUCTOS ===== -->
+                    <!-- Sin table-clean: esta tabla tiene bordes intencionales.
+                         Los bordes están forzados con !important en el CSS para
+                         neutralizar cualquier herencia de Bootstrap. -->
                     <table class="items-table">
                         <thead>
                             <tr>
@@ -177,7 +217,6 @@
                             <tr t-foreach="info.get('lines') or []" t-as="line">
                                 <t t-set="p" t-value="line.get('prices')"/>
                                 <td><span t-out="line.get('codigo')"/></td>
-                                <!-- He forzado la descripción a la izquierda como se ve en la foto, el resto centrado -->
                                 <td class="desc-left"><span t-out="line.get('descripcion')"/></td>
                                 <td><span t-out="line.get('cantidad')"/></td>
                                 <td><span t-out="line.get('unidad')"/></td>
@@ -192,16 +231,17 @@
                     </table>
 
                     <!-- ===== SECCIÓN INFERIOR ===== -->
-                    <table class="bottom-section">
+                    <!-- table-clean: contenedor de layout sin bordes propios -->
+                    <table class="bottom-section table-clean">
                         <tr>
-                            <!-- Textos a la izquierda (A Cuenta, Preventista, Dirección) -->
                             <td style="width: 55%; vertical-align: top; padding-top: 5px;">
                                 <div class="customer-info">
                                     <div t-if="not is_in">DIRECCION CLIENTE: <span t-out="o.partner_id.contact_address or ''"/></div>
                                 </div>
                             </td>
-                            
-                            <!-- Caja de Totales a la derecha -->
+
+                            <!-- Caja de Totales: borde exterior declarado con !important en CSS,
+                                 celdas internas reseteadas a border:0 !important -->
                             <td style="width: 45%; vertical-align: top;">
                                 <t t-if="has_sale">
                                     <table class="totals-box">
@@ -223,14 +263,14 @@
                         </tr>
                     </table>
 
-                    <!-- ===== FIRMAS (tabla 2 filas: líneas en el mismo tr ⇒ alineadas) ===== -->
-                    <table class="signatures">
-                        <!-- Fila 1: texto que va SOBRE la línea (altura fija e igual) -->
+                    <!-- ===== FIRMAS ===== -->
+                    <!-- table-clean: tabla de layout puro; el único borde visible
+                         es .sig-line (border-top inline) que no es afectado por table-clean -->
+                    <table class="signatures table-clean">
                         <tr>
                             <td class="above">&#160;</td>
                             <td class="above">VENTA ALMACEN</td>
                         </tr>
-                        <!-- Fila 2: las líneas de firma -->
                         <tr>
                             <td class="sig">
                                 <div class="sig-line">
