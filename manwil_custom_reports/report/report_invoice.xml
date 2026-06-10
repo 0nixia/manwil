@@ -45,8 +45,8 @@
                         .border-bottom-black { border-bottom: 1px solid black !important; }
 
                         /* ENCABEZADO */
-                        .manwil-inv .header-table { width: 100%; margin-bottom: 5px; border-collapse: collapse; }
-                        .manwil-inv .header-table td { vertical-align: middle; }
+                        .manwil-inv .header-table { width: 100%; margin-bottom: 5px; border-collapse: separate; border: 0 !important; }
+                        .manwil-inv .header-table td { vertical-align: middle; border: 0 !important; }
 
                         .manwil-inv .company-name { font-size: 10pt; font-weight: bold; color: #444; text-transform: uppercase; margin-bottom: 2px; }
                         .manwil-inv .company-sub { font-size: 9pt; font-weight: bold; color: #444; margin-top: 1px; }
@@ -63,8 +63,8 @@
                         .manwil-inv .fiscal .cuf { font-size: 8pt; word-break: break-all; letter-spacing: 0px; }
 
                         /* DATOS DEL CLIENTE */
-                        .manwil-inv .client-info { width: 100%; margin-bottom: 5px; font-size: 9.5pt; border-collapse: collapse; }
-                        .manwil-inv .client-info td { padding: 2px; vertical-align: middle; }
+                        .manwil-inv .client-info { width: 100%; margin-bottom: 5px; font-size: 9.5pt; border-collapse: separate; border: 0 !important; }
+                        .manwil-inv .client-info td { padding: 2px; vertical-align: middle; border: 0 !important; }
                         .manwil-inv .client-info .lbl-client { font-weight: bold; color: #555; width: 18%; }
                         .manwil-inv .client-info .val-client { color: #222; width: 32%; }
 
@@ -146,7 +146,7 @@
                     <!-- ===== Encabezado ===== -->
                     <!-- table-clean en header-table y sus tablas internas: ninguna
                          de ellas tiene bordes visibles intencionales -->
-                    <table class="header-table table-clean">
+                    <table class="header-table table-clean" border="0" style="border: 0 !important;">
                         <tr>
                             <td style="width:42%;">
                                 <!-- Tabla interna: logo + nombre empresa -->
@@ -204,7 +204,7 @@
 
                     <!-- ===== Datos del cliente ===== -->
                     <!-- table-clean: tabla de layout, sin bordes intencionales -->
-                    <table t-if="o.move_type != 'in_receipt'" class="client-info table-clean">
+                    <table t-if="o.move_type != 'in_receipt'" class="client-info table-clean" border="0" style="border: 0 !important;">
                         <tr>
                             <td class="lbl-client">Fecha:</td>
                             <td class="val-client"><span t-out="info.get('fecha')"/></td>
