@@ -40,6 +40,7 @@
                             border-left: 0 !important;
                             border-right: 0 !important;
                             box-shadow: none !important;
+                            outline: 0 !important;
                         }
                         .border-top-black    { border-top: 1px solid black !important; }
                         .border-bottom-black { border-bottom: 1px solid black !important; }
@@ -150,12 +151,12 @@
                         <tr>
                             <td style="width:42%; border: none !important; box-shadow: none !important;">
                                 <!-- Tabla interna: logo + nombre empresa -->
-                                <table class="table-clean" style="width: 100%;">
+                                <table class="table-clean" border="0" cellpadding="0" cellspacing="0" style="width: 100%; border: none !important; outline: none !important;">
                                     <tr>
-                                        <td style="width: 1%; white-space: nowrap; padding-right: 8px; text-align: left; vertical-align: middle;">
+                                        <td style="width: 1%; white-space: nowrap; padding-right: 8px; text-align: left; vertical-align: middle; border: none !important;">
                                             <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 85px; max-width: 150px; object-fit: contain;"/>
                                         </td>
-                                        <td style="text-align: center; vertical-align: middle;">
+                                        <td style="text-align: center; vertical-align: middle; border: none !important;">
                                             <div class="company-name"><span t-out="info.get('razon_social')"/></div>
                                             <div class="company-sub"><span t-out="info.get('sucursal')"/></div>
                                             <div class="company-sub">
@@ -180,18 +181,18 @@
                                 <div class="fiscal">
                                     <!-- Tabla interna del recuadro fiscal: el borde está en .fiscal
                                          (el div), no en la tabla; la tabla en sí no necesita bordes -->
-                                    <table class="table-clean" style="width: 100%;">
+                                    <table class="table-clean" border="0" cellpadding="0" cellspacing="0" style="width: 100%; border: none !important; outline: none !important;">
                                         <tr>
-                                            <td class="lbl">NIT:</td>
-                                            <td><span t-out="info.get('nit_emisor') or ''"/></td>
+                                            <td class="lbl" style="border: none !important;">NIT:</td>
+                                            <td style="border: none !important;"><span t-out="info.get('nit_emisor') or ''"/></td>
                                         </tr>
                                         <tr>
-                                            <td class="lbl">FACTURA N°:</td>
-                                            <td><span t-out="info.get('invoice_number')"/></td>
+                                            <td class="lbl" style="border: none !important;">FACTURA N°:</td>
+                                            <td style="border: none !important;"><span t-out="info.get('invoice_number')"/></td>
                                         </tr>
                                         <tr>
-                                            <td class="lbl">CÓD. AUTORIZACIÓN:</td>
-                                            <td class="cuf">
+                                            <td class="lbl" style="border: none !important;">CÓD. AUTORIZACIÓN:</td>
+                                            <td class="cuf" style="border: none !important;">
                                                 <span t-if="info.get('has_siat')" style="white-space: pre-line;" t-out="info.get('cuf_chunked') or ''"/>
                                                 <span t-else="" style="font-weight:bold; color:#b00;">SIN VALOR FISCAL</span>
                                             </td>

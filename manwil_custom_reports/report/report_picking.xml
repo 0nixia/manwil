@@ -45,6 +45,7 @@
                             border-left: 0 !important;
                             border-right: 0 !important;
                             box-shadow: none !important;
+                            outline: 0 !important;
                         }
                         .border-top-black    { border-top: 1px solid black !important; }
                         .border-bottom-black { border-bottom: 1px solid black !important; }
@@ -137,7 +138,7 @@
                     <!-- ===== ENCABEZADO ===== -->
                     <!-- table-clean: esta tabla no tiene bordes intencionales; Bootstrap
                          añade border-color en td con border-collapse:collapse → líneas fantasma -->
-                    <table class="header-table table-clean">
+                    <table class="header-table table-clean" border="0" cellpadding="0" cellspacing="0" style="border: none !important; outline: none !important;">
                         <tr>
                             <td style="width: 35%; border: none !important; box-shadow: none !important;">
                                 <div class="company-title">
@@ -166,21 +167,21 @@
                                 </div>
                                 <div class="info-box" style="border: none !important; box-shadow: none !important;">
                                     <!-- table-clean: tabla interna del recuadro NRO/Fecha/Hora -->
-                                    <table class="table-clean">
+                                    <table class="table-clean" border="0" cellpadding="0" cellspacing="0" style="border: none !important; outline: none !important;">
                                         <tr>
-                                            <td class="lbl-bold">NRO:</td>
-                                            <td style="text-align: right;"><span t-field="o.name"/></td>
+                                            <td class="lbl-bold" style="border: none !important;">NRO:</td>
+                                            <td style="text-align: right; border: none !important;"><span t-field="o.name"/></td>
                                         </tr>
                                         <tr>
-                                            <td class="lbl-bold">Fecha:</td>
-                                            <td style="text-align: right;">
+                                            <td class="lbl-bold" style="border: none !important;">Fecha:</td>
+                                            <td style="text-align: right; border: none !important;">
                                                 <span t-if="o.date_done" t-field="o.date_done" t-options="{'format': 'dd/MM/yyyy'}"/>
                                                 <span t-elif="o.scheduled_date" t-field="o.scheduled_date" t-options="{'format': 'dd/MM/yyyy'}"/>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="lbl-bold">Hora:</td>
-                                            <td style="text-align: right;">
+                                            <td class="lbl-bold" style="border: none !important;">Hora:</td>
+                                            <td style="text-align: right; border: none !important;">
                                                 <span t-if="o.date_done" t-field="o.date_done" t-options="{'format': 'HH:mm:ss'}"/>
                                                 <span t-elif="o.scheduled_date" t-field="o.scheduled_date" t-options="{'format': 'HH:mm:ss'}"/>
                                             </td>
