@@ -107,11 +107,11 @@
                         /* ========================================= */
                         /* SECCIÓN INFERIOR                          */
                         /* ========================================= */
-                        .manwil-doc .bottom-section { width: 100%; margin-top: 15px; border-collapse: collapse; }
+                        .manwil-doc .customer-info { font-size: 9.5pt; line-height: 1.6; text-transform: uppercase; margin-top: 15px; }
 
-                        .manwil-doc .customer-info { font-size: 9.5pt; line-height: 1.6; text-transform: uppercase; }
-
-                        .manwil-doc .totals-box { width: 100%; border-collapse: collapse; border: 1.5px solid #222 !important; }
+                        /* totals-box: tabla autónoma alineada a la derecha con margin-left:auto.
+                           NO está anidada en un <td> — eso evita el colapso de altura en Odoo.sh. */
+                        .manwil-doc .totals-box { width: 45%; margin-left: auto; margin-right: 0; margin-top: 10px; border-collapse: collapse; border: 1.5px solid #222 !important; }
                         .manwil-doc .totals-box tr {
                             border: 0 !important;
                             box-shadow: none !important;
@@ -126,15 +126,12 @@
                         .manwil-doc .totals-box td.val { text-align: right; width: 35%; color: #222; }
 
                         /* ========================================= */
-                        /* FIRMAS                                    */
+                        /* FIRMAS — Bootstrap row/col (sin tabla)    */
                         /* ========================================= */
-                        .manwil-doc .signatures { width: 100%; margin-top: 60px; page-break-inside: avoid; border-collapse: collapse; }
-                        .manwil-doc .signatures td { width: 50%; text-align: center; }
-                        .manwil-doc .signatures td.above { height: 20px; vertical-align: bottom; font-size: 9pt; font-weight: bold; text-transform: uppercase; color: #111; padding-bottom: 4px; }
-                        .manwil-doc .signatures td.sig { vertical-align: top; }
-                        .manwil-doc .signatures .sig-line { border-top: 1pt solid #111; width: 220px; margin: 0 auto; padding-top: 6px; }
-                        .manwil-doc .signatures .sig-title { font-weight: bold; font-size: 10pt; text-transform: uppercase; }
-                        .manwil-doc .signatures .sig-name { margin-top: 5px; font-size: 10pt; }
+                        .manwil-doc .sig-label { font-size: 9pt; font-weight: bold; text-transform: uppercase; color: #111; margin-bottom: 4px; min-height: 16px; }
+                        .manwil-doc .sig-line { border-top: 1pt solid #111; width: 80%; margin: 0 auto; padding-top: 6px; text-align: center; }
+                        .manwil-doc .sig-title { font-weight: bold; font-size: 10pt; text-transform: uppercase; }
+                        .manwil-doc .sig-name  { margin-top: 5px; font-size: 10pt; }
                     </style>
 
                     <!-- ===== ENCABEZADO ===== -->
@@ -231,62 +228,54 @@
                     </table>
 
                     <!-- ===== SECCIÓN INFERIOR ===== -->
-                    <!-- table-clean: contenedor de layout sin bordes propios -->
-                    <table class="bottom-section table-clean">
-                        <tr>
-                            <td style="width: 55%; vertical-align: top; padding-top: 5px;">
-                                <div class="customer-info">
-                                    <div t-if="not is_in">DIRECCION CLIENTE: <span t-out="o.partner_id.contact_address or ''"/></div>
-                                </div>
-                            </td>
+                    <!-- Dirección cliente: div simple, sin tabla contenedora -->
+                    <div class="customer-info">
+                        <div t-if="not is_in">DIRECCION CLIENTE: <span t-out="o.partner_id.contact_address or ''"/></div>
+                    </div>
 
-                            <!-- Caja de Totales: borde exterior declarado con !important en CSS,
-                                 celdas internas reseteadas a border:0 !important -->
-                            <td style="width: 45%; vertical-align: top;">
-                                <t t-if="has_sale">
-                                    <table class="totals-box">
-                                        <tr>
-                                            <td class="lbl">Sub Total:</td>
-                                            <td class="val"><span t-out="'%.2f' % (info.get('sub_total') or 0.0)"/></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="lbl">Total Descuento:</td>
-                                            <td class="val"><span t-out="'%.2f' % (info.get('descuento') or 0.0)"/></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="lbl" style="font-weight: 900;">Total:</td>
-                                            <td class="val" style="font-weight: 900;"><span t-out="'%.2f' % (info.get('total') or 0.0)"/></td>
-                                        </tr>
-                                    </table>
-                                </t>
-                            </td>
-                        </tr>
-                    </table>
+                    <!-- Totales: tabla autónoma con margin-left:auto para alinear a la derecha.
+                         Sacada del <td> contenedor → evita el colapso de altura en Odoo.sh
+                         cuando wkhtmltopdf calcula la altura del td padre. -->
+                    <t t-if="has_sale">
+                        <table class="totals-box">
+                            <tr>
+                                <td class="lbl">Sub Total:</td>
+                                <td class="val"><span t-out="'%.2f' % (info.get('sub_total') or 0.0)"/></td>
+                            </tr>
+                            <tr>
+                                <td class="lbl">Total Descuento:</td>
+                                <td class="val"><span t-out="'%.2f' % (info.get('descuento') or 0.0)"/></td>
+                            </tr>
+                            <tr>
+                                <td class="lbl" style="font-weight: 900;">Total:</td>
+                                <td class="val" style="font-weight: 900;"><span t-out="'%.2f' % (info.get('total') or 0.0)"/></td>
+                            </tr>
+                        </table>
+                    </t>
 
-                    <!-- ===== FIRMAS ===== -->
-                    <!-- table-clean: tabla de layout puro; el único borde visible
-                         es .sig-line (border-top inline) que no es afectado por table-clean -->
-                    <table class="signatures table-clean">
-                        <tr>
-                            <td class="above">&#160;</td>
-                            <td class="above">VENTA ALMACEN</td>
-                        </tr>
-                        <tr>
-                            <td class="sig">
-                                <div class="sig-line">
-                                    <div class="sig-title">ELABORADO POR</div>
-                                    <div class="sig-name" t-if="o.create_uid">
-                                        (<span t-out="o.create_uid.name"/>)
-                                    </div>
+                    <!-- ===== FIRMAS — Bootstrap row/col (sin <table>) ===== -->
+                    <!-- Bootstrap row+col-6 usa el grid clásico de Odoo.sh; sin flex
+                         explícito en el contenido → altura calculada desde el contenido
+                         sin riesgo de colapso a cero. -->
+                    <div class="row text-center" style="margin-top: 50px; page-break-inside: avoid;">
+                        <!-- Izquierda: ELABORADO POR (sin etiqueta sobre la línea) -->
+                        <div class="col-6">
+                            <div class="sig-label">&#160;</div>
+                            <div class="sig-line">
+                                <div class="sig-title">ELABORADO POR</div>
+                                <div class="sig-name" t-if="o.create_uid">
+                                    (<span t-out="o.create_uid.name"/>)
                                 </div>
-                            </td>
-                            <td class="sig">
-                                <div class="sig-line">
-                                    <div class="sig-title">RECIBIDO</div>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
+                            </div>
+                        </div>
+                        <!-- Derecha: etiqueta "VENTA ALMACEN" sobre la línea "RECIBIDO" -->
+                        <div class="col-6">
+                            <div class="sig-label">VENTA ALMACEN</div>
+                            <div class="sig-line">
+                                <div class="sig-title">RECIBIDO</div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
               </div>
