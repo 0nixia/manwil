@@ -186,6 +186,10 @@
                                                 <span t-elif="o.scheduled_date" t-field="o.scheduled_date" t-options="{'format': 'HH:mm:ss'}"/>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td class="lbl-bold" style="border: none !important;">Doc. Origen:</td>
+                                            <td style="text-align: right; border: none !important;"><span t-out="o.origin or ''"/></td>
+                                        </tr>
                                     </table>
                                 </div>
                             </td>
@@ -215,7 +219,7 @@
                             <tr t-foreach="info.get('lines') or []" t-as="line">
                                 <t t-set="p" t-value="line.get('prices')"/>
                                 <td><span t-out="line.get('codigo')"/></td>
-                                <td class="desc-left"><span t-out="line.get('descripcion')"/></td>
+                                <td><span t-out="line.get('descripcion')"/></td>
                                 <td><span t-out="line.get('cantidad')"/></td>
                                 <td><span t-out="line.get('unidad')"/></td>
                                 <t t-if="has_sale">
