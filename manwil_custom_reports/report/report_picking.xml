@@ -65,7 +65,7 @@
                         .manwil-doc .doc-title { font-size: 16pt; font-weight: 900; text-align: center; color: #222; letter-spacing: 0.5px; margin-top: 15px; }
 
                         .manwil-doc .user-label { font-size: 9pt; color: #333; margin-bottom: 2px; padding-left: 5px; }
-                        .manwil-doc .info-box { padding: 4px 8px; font-size: 9pt; border: none !important; box-shadow: none !important; }
+                        .manwil-doc .info-box { font-size: 9pt; }
                         .manwil-doc .info-box table { width: 100%; line-height: 1.4; border-collapse: collapse; border: none !important; }
                         .manwil-doc .info-box td { padding: 1px 0; }
                         .manwil-doc .info-box .lbl-bold { font-weight: bold; color: #333; }
@@ -165,7 +165,7 @@
                                 <div class="user-label">
                                     Responsable: <span style="margin-left: 4px;" t-out="o.user_id.name or ''"/>
                                 </div>
-                                <div class="info-box" style="border: none !important; box-shadow: none !important;">
+                                <div class="info-box" style="border: 1px solid black; border-radius: 8px; padding: 8px; margin-top: 5px;">
                                     <!-- table-clean: tabla interna del recuadro NRO/Fecha/Hora -->
                                     <table class="table-clean" border="0" cellpadding="0" cellspacing="0" style="border: none !important; outline: none !important;">
                                         <tr>
