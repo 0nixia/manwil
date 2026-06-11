@@ -1,8 +1,22 @@
-from odoo import models
+from odoo import models, fields
 
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
+
+    validated_by_id = fields.Many2one(
+        'res.users',
+        string='Validado por',
+        readonly=True,
+        copy=False,
+    )
+
+    def button_validate(self):
+        res = super().button_validate()
+        for picking in self:
+            if picking.state == 'done':
+                picking.validated_by_id = self.env.user
+        return res
 
     def do_print_picking(self):
         """Redirige el botón 'Print' de la cabecera del picking al reporte

@@ -264,13 +264,13 @@
                          explícito en el contenido → altura calculada desde el contenido
                          sin riesgo de colapso a cero. -->
                     <div class="row text-center" style="margin-top: 50px; page-break-inside: avoid;">
-                        <!-- Izquierda: ELABORADO POR (sin etiqueta sobre la línea) -->
+                        <!-- Izquierda: ELABORADO POR (prioriza validador → responsable → creador) -->
                         <div class="col-6">
                             <div class="sig-label">&#160;</div>
                             <div class="sig-line">
                                 <div class="sig-title">ELABORADO POR</div>
-                                <div class="sig-name" t-if="o.create_uid">
-                                    (<span t-out="o.create_uid.name"/>)
+                                <div class="sig-name">
+                                    (<span t-out="o.validated_by_id.name or o.user_id.name or o.create_uid.name"/>)
                                 </div>
                             </div>
                         </div>
