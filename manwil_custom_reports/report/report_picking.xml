@@ -3,6 +3,7 @@
 
     <!-- ============ ACCIÓN DE REPORTE ============ -->
     <record id="action_report_manwil_picking" model="ir.actions.report">
+        <field name="name">Nota de Almacén (Media Carta)</field>
         <field name="model">stock.picking</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">manwil_custom_reports.report_manwil_picking_document</field>
