@@ -3,7 +3,6 @@
 
     <!-- ============ ACCIÓN DE REPORTE ============ -->
     <record id="action_report_manwil_invoice" model="ir.actions.report">
-        <field name="name">Factura Boliviana (Media Carta)</field>
         <field name="model">account.move</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">manwil_custom_reports.report_manwil_invoice_document</field>
@@ -11,6 +10,7 @@
         <field name="paperformat_id" ref="manwil_custom_reports.paperformat_media_carta_landscape"/>
         <field name="binding_model_id" ref="account.model_account_move"/>
         <field name="binding_type">report</field>
+        <field name="print_report_name">'Factura - %s' % (object.siat_invoice_id.invoice_number or object.name)</field>
     </record>
 
     <!-- ============ PLANTILLA QWEB ============ -->
