@@ -11,10 +11,10 @@ class StockPicking(models.Model):
         copy=False,
     )
 
-    def button_validate(self):
-        res = super().button_validate()
+    def _action_done(self):
+        res = super()._action_done()
         for picking in self:
-            if picking.state == 'done':
+            if picking.state == 'done' and not picking.validated_by_id:
                 picking.validated_by_id = self.env.user
         return res
 
