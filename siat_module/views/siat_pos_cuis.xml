@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="siat_pos_view_list" model="ir.ui.view">
+    <field name="name">siat.pos.view.list</field>
+    <field name="model">siat.point_of_sale</field>
+    <field name="arch" type="xml">
+      <list edit="false" duplicate="false" delete="false">
+        <field name="pos_siat_id" string="Código PV"/>
+        <field name="name" />
+        <field name="pos_type" />
+        <field name="cuis" string="CUIS"/>
+        <field name="valid_for" string="Vigencia CUIS"/>
+        <field name="write_date" string="Fecha Actualización"/>
+        <button name="delete_pos" type="object" string="Eliminar POS" class="btn btn-danger"/>
+        <button name="get_cufd" type="object" string="CUFD" class="btn btn-info"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="siat_pos_view_list_extra" model="ir.ui.view">
+    <field name="name">siat.pos.list.inherit</field>
+    <field name="model">siat.point_of_sale</field>
+    <field name="inherit_id" ref="siat_module.siat_pos_view_list"/>
+    <field name="arch" type="xml">
+        <xpath expr="//list" position="attributes">
+            <attribute name="js_class">button_in_list_sync</attribute>
+        </xpath>
+    </field>
+  </record>
+
+  <record id="siat_pos_view_form" model="ir.ui.view">
+    <field name="name">siat.pos.view.form</field>
+    <field name="model">siat.point_of_sale</field>
+    <field name="arch" type="xml">
+      <form duplicate="false">
+        <sheet>
+          <div class="oe_title">
+            <label name="name" for="name" string="Nombre Punto de Venta"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <group>
+            <group string="Datos del Punto de Venta">
+              <field name="pos_siat_id" string="Código PV (SIAT)" readonly="1"/>
+              <field name="pos_type"/>
+              <field name="descripcion"/>
+              <field name="codigo_sucursal" readonly="1"/>
+              <field name="siat_branch" readonly="1"/>
+            </group>
+            <group string="Códigos SIAT">
+              <field name="cuis" readonly="1"/>
+              <field name="valid_for" readonly="1"/>
+            </group>
+          </group>
+          <footer>
+            <button name="sync_cuis" type="object" string="Obtener CUIS" class="btn btn-secondary"/>
+            <button name="get_cufd" type="object" string="Obtener CUFD" class="btn btn-secondary"/>
+          </footer>
+        </sheet>
+      </form>
+    </field>
+  </record>
+</odoo>

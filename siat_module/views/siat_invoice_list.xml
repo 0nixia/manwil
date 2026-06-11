@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="siat_invoice_view_list" model="ir.ui.view">
+    <field name="name">siat.invoice.view.list</field>
+    <field name="model">siat.invoice</field>
+    <field name="arch" type="xml">
+      <list create="false" delete="false" duplicate="false" default_order='invoice_datetime desc'>
+        <field name="customer_name" string="Cliente"/>
+        <field name="display_note"/>
+        <field name="status" column_invisible="1" />
+        <field name="is_invoicer" column_invisible="1" />
+        <button name="print_paper" type="object" string="Imprimir Hoja" class="btn btn-sm btn-info" invisible="is_invoicer"/>
+        <button name="print_ticket" type="object" string="Imprimir Ticket" class="btn btn-sm btn-info" invisible="is_invoicer"/>
+        <button name="print_invoicer_report" type="object" string="Imprimir Factura"  class="btn btn-sm btn-info" invisible="not is_invoicer" />
+        <button name="open_siat_page" type="object" string="Ver en SIAT" class="btn btn-sm btn-warning"/>
+        <button name="void_invoicer" type="object" string="Anular Factura" class="btn btn-sm btn-danger" invisible="status == 'VOID' or not is_invoicer"/>
+        <button name="reset_void_invoicer" type="object" string="Revertir Anulación F" class="btn btn-sm btn-success" invisible="status != 'VOID' or not is_invoicer"/>
+      </list>
+    </field>
+  </record>
+  <record id="view_quotation_list_with_onboarding" model="ir.ui.view">
+    <field name="name">siat.invoice.list.inherit</field>
+    <field name="model">siat.invoice</field>
+    <field name="inherit_id" ref="siat_module.siat_invoice_view_list"/>
+    <field name="arch" type="xml">
+        <xpath expr="//list" position="attributes">
+            <attribute name="js_class">button_in_list</attribute>
+        </xpath>
+    </field>
+   </record>
+</odoo>

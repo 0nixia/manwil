@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- El botón 'Print' del estado 'Hecho' es type="action" y apunta directo
+         a stock.action_report_delivery (no pasa por Python). Lo reapuntamos al
+         método do_print_picking, que ya devuelve el reporte Media Carta de
+         Manwil. El botón del estado 'Listo' ya llama a do_print_picking. -->
+    <record id="view_picking_form_manwil_print" model="ir.ui.view">
+        <field name="name">stock.picking.form.manwil.print</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@type='action' and @data-hotkey='o']" position="attributes">
+                <attribute name="name">do_print_picking</attribute>
+                <attribute name="type">object</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

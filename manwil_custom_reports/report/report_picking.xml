@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============ ACCIÓN DE REPORTE ============ -->
+    <record id="action_report_manwil_picking" model="ir.actions.report">
+        <field name="name">Nota de Almacén (Media Carta)</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">manwil_custom_reports.report_manwil_picking_document</field>
+        <field name="report_file">manwil_custom_reports.report_manwil_picking_document</field>
+        <field name="paperformat_id" ref="manwil_custom_reports.paperformat_media_carta_landscape"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Nota de Almacén - %s - %s' % (object.partner_id.name or 'Contraparte', object.name)</field>
+    </record>
+
+    <!-- ============ PLANTILLA QWEB ============ -->
+    <template id="report_manwil_picking_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+              <div class="article"
+                   t-att-data-oe-model="o and o._name"
+                   t-att-data-oe-id="o and o.id"
+                   t-att-data-oe-lang="o and o.env.context.get('lang')">
+
+                <t t-set="is_in" t-value="o.picking_type_id.code == 'incoming'"/>
+                <t t-set="info" t-value="info_map.get(o.id, {})"/>
+                <t t-set="has_sale" t-value="info.get('has_sale')"/>
+
+                <div class="page manwil-doc">
+                    <style>
+                        .manwil-doc { font-family: Arial, Helvetica, sans-serif; font-size: 9.5pt; color: #222; }
+
+                        /* ========================================= */
+                        /* TABLA-LIMPIA: elimina bordes Bootstrap    */
+                        /* Aplica a tablas sin bordes visibles para  */
+                        /* evitar líneas fantasma en Windows/Chrome  */
+                        /* ========================================= */
+                        .table-clean,
+                        .table-clean tr,
+                        .table-clean th,
+                        .table-clean td {
+                            border: 0 !important;
+                            border-top: 0 !important;
+                            border-bottom: 0 !important;
+                            border-left: 0 !important;
+                            border-right: 0 !important;
+                            box-shadow: none !important;
+                            outline: 0 !important;
+                        }
+                        .border-top-black    { border-top: 1px solid black !important; }
+                        .border-bottom-black { border-bottom: 1px solid black !important; }
+
+                        /* ========================================= */
+                        /* ENCABEZADO                                */
+                        /* ========================================= */
+                        .manwil-doc .header-table { width: 100%; margin-bottom: 15px; border-collapse: separate; border: none !important; }
+                        .manwil-doc .header-table td { vertical-align: top; border: none !important; box-shadow: none !important; }
+
+                        .manwil-doc .company-title { font-size: 14pt; font-weight: bold; color: #333; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; }
+
+                        .manwil-doc .meta-block { font-size: 9pt; line-height: 1.2; margin-bottom: 6px; }
+                        .manwil-doc .meta-block .lbl { font-weight: bold; color: #333; text-transform: uppercase; }
+                        .manwil-doc .meta-block .val { text-transform: uppercase; color: #444; }
+
+                        .manwil-doc .doc-title { font-size: 16pt; font-weight: 900; text-align: center; color: #222; letter-spacing: 0.5px; margin-top: 15px; }
+
+                        .manwil-doc .user-label { font-size: 9pt; color: #333; margin-bottom: 2px; padding-left: 5px; }
+                        .manwil-doc .info-box { font-size: 9pt; }
+                        .manwil-doc .info-box table { width: 100%; line-height: 1.4; border-collapse: collapse; border: none !important; }
+                        .manwil-doc .info-box td { padding: 1px 0; }
+                        .manwil-doc .info-box .lbl-bold { font-weight: bold; color: #333; }
+
+                        /* ========================================= */
+                        /* TABLA DE PRODUCTOS (Sin líneas verticales)*/
+                        /* ========================================= */
+                        .manwil-doc .items-table {
+                            width: 100%;
+                            border-collapse: separate;
+                            border-spacing: 0;
+                            border: 1.5px solid #222 !important;
+                            border-radius: 8px;
+                            margin-top: 15px;
+                        }
+                        /* Resetear bordes Bootstrap en filas y celdas, luego re-aplicar sólo el
+                           borde inferior deseado con !important para que no se filtre nada. */
+                        .manwil-doc .items-table tr {
+                            border: 0 !important;
+                            box-shadow: none !important;
+                        }
+                        .manwil-doc .items-table th,
+                        .manwil-doc .items-table td {
+                            border: 0 !important;
+                            border-bottom: 1px solid #222 !important;
+                            box-shadow: none !important;
+                            padding: 6px 4px;
+                            text-align: center;
+                            vertical-align: middle;
+                        }
+                        .manwil-doc .items-table th { font-weight: bold; font-size: 9.5pt; }
+                        .manwil-doc .items-table td { font-size: 9pt; }
+
+                        /* Eliminar borde inferior en la última fila */
+                        .manwil-doc .items-table tbody tr:last-child td {
+                            border-bottom: none !important;
+                        }
+                        .manwil-doc .items-table td.desc-left { text-align: left; }
+
+                        /* ========================================= */
+                        /* SECCIÓN INFERIOR                          */
+                        /* ========================================= */
+                        .manwil-doc .customer-info { font-size: 9.5pt; line-height: 1.6; text-transform: uppercase; margin-top: 15px; }
+
+                        /* totals-box: tabla autónoma alineada a la derecha con margin-left:auto.
+                           NO está anidada en un td contenedor — evita el colapso de altura en Odoo.sh. */
+                        .manwil-doc .totals-box { width: 45%; margin-left: auto; margin-right: 0; margin-top: 10px; border-collapse: collapse; border: 1.5px solid #222 !important; }
+                        .manwil-doc .totals-box tr {
+                            border: 0 !important;
+                            box-shadow: none !important;
+                        }
+                        .manwil-doc .totals-box td {
+                            padding: 4px 8px;
+                            border: 0 !important;
+                            box-shadow: none !important;
+                            font-size: 9.5pt;
+                        }
+                        .manwil-doc .totals-box td.lbl { text-align: right; font-weight: bold; color: #333; }
+                        .manwil-doc .totals-box td.val { text-align: right; width: 35%; color: #222; }
+
+                        /* ========================================= */
+                        /* FIRMAS — Bootstrap row/col (sin tabla)    */
+                        /* ========================================= */
+                        .manwil-doc .sig-label { font-size: 9pt; font-weight: bold; text-transform: uppercase; color: #111; margin-bottom: 4px; min-height: 16px; }
+                        .manwil-doc .sig-line { border-top: 1pt solid #111; width: 80%; margin: 0 auto; padding-top: 6px; text-align: center; }
+                        .manwil-doc .sig-title { font-weight: bold; font-size: 10pt; text-transform: uppercase; }
+                        .manwil-doc .sig-name  { margin-top: 5px; font-size: 10pt; }
+                    </style>
+
+                    <!-- ===== ENCABEZADO ===== -->
+                    <!-- table-clean: esta tabla no tiene bordes intencionales; Bootstrap
+                         añade border-color en td con border-collapse:collapse → líneas fantasma -->
+                    <table class="header-table table-clean" border="0" cellpadding="0" cellspacing="0" style="border: none !important; outline: none !important;">
+                        <tr>
+                            <td style="width: 35%; border: none !important; box-shadow: none !important;">
+                                <div class="company-title">
+                                    <span t-field="o.company_id.name"/>
+                                </div>
+                                <div class="meta-block">
+                                    <div class="lbl">RAZÓN:</div>
+                                    <div class="val"><span t-out="o.picking_type_id.name or ''"/></div>
+                                </div>
+                                <div class="meta-block">
+                                    <div class="lbl">CONCEPTO:</div>
+                                    <div class="val"><span t-out="o.partner_id.name or ''"/></div>
+                                </div>
+                            </td>
+
+                            <td style="width: 40%; vertical-align: top; border: none !important; box-shadow: none !important;">
+                                <div class="doc-title">
+                                    <t t-if="is_in">NOTA DE INGRESO</t>
+                                    <t t-else="">NOTA DE SALIDA</t>
+                                </div>
+                            </td>
+
+                            <td style="width: 25%; border: none !important;">
+                                <div class="user-label">
+                                    Responsable: <span style="margin-left: 4px;" t-out="o.user_id.name or ''"/>
+                                </div>
+                                <div class="info-box" style="border: 1px solid black; border-radius: 8px; padding: 8px; margin-top: 5px;">
+                                    <!-- table-clean: tabla interna del recuadro NRO/Fecha/Hora -->
+                                    <table class="table-clean" border="0" cellpadding="0" cellspacing="0" style="border: none !important; outline: none !important;">
+                                        <tr>
+                                            <td class="lbl-bold" style="border: none !important;">NRO:</td>
+                                            <td style="text-align: right; border: none !important;"><span t-field="o.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl-bold" style="border: none !important;">Fecha:</td>
+                                            <td style="text-align: right; border: none !important;">
+                                                <span t-if="o.date_done" t-field="o.date_done" t-options="{'format': 'dd/MM/yyyy'}"/>
+                                                <span t-elif="o.scheduled_date" t-field="o.scheduled_date" t-options="{'format': 'dd/MM/yyyy'}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl-bold" style="border: none !important;">Hora:</td>
+                                            <td style="text-align: right; border: none !important;">
+                                                <span t-if="o.date_done" t-field="o.date_done" t-options="{'format': 'HH:mm:ss'}"/>
+                                                <span t-elif="o.scheduled_date" t-field="o.scheduled_date" t-options="{'format': 'HH:mm:ss'}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl-bold" style="border: none !important;">Doc. Origen:</td>
+                                            <td style="text-align: right; border: none !important;"><span t-out="o.origin or ''"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ===== TABLA DE PRODUCTOS ===== -->
+                    <!-- Sin table-clean: esta tabla tiene bordes intencionales.
+                         Los bordes están forzados con !important en el CSS para
+                         neutralizar cualquier herencia de Bootstrap. -->
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th style="width:12%;">codigo</th>
+                                <th>Descripcion</th>
+                                <th style="width:8%;">Cantidad</th>
+                                <th style="width:8%;">Unidad</th>
+                                <t t-if="has_sale">
+                                    <th style="width:11%;">P.U.</th>
+                                    <th style="width:11%;">Precio</th>
+                                    <th style="width:10%;">Descto.</th>
+                                    <th style="width:12%;">Total</th>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="info.get('lines') or []" t-as="line">
+                                <t t-set="p" t-value="line.get('prices')"/>
+                                <td><span t-out="line.get('codigo')"/></td>
+                                <td><span t-out="line.get('descripcion')"/></td>
+                                <td><span t-out="line.get('cantidad')"/></td>
+                                <td><span t-out="line.get('unidad')"/></td>
+                                <t t-if="has_sale">
+                                    <td><span t-if="p" t-out="'%.2f' % p.get('pu')"/></td>
+                                    <td><span t-if="p" t-out="'%.2f' % p.get('precio')"/></td>
+                                    <td><span t-if="p" t-out="'%.2f' % p.get('descuento')"/></td>
+                                    <td><span t-if="p" t-out="'%.2f' % p.get('total')"/></td>
+                                </t>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- ===== SECCIÓN INFERIOR ===== -->
+                    <!-- Dirección cliente: div simple, sin tabla contenedora -->
+                    <div class="customer-info">
+                        <div t-if="not is_in">DIRECCION CLIENTE: <span t-out="o.partner_id.contact_address or ''"/></div>
+                    </div>
+
+                    <!-- Totales: tabla autónoma con margin-left:auto para alinear a la derecha.
+                         Sacada del <td> contenedor → evita el colapso de altura en Odoo.sh
+                         cuando wkhtmltopdf calcula la altura del td padre. -->
+                    <t t-if="has_sale">
+                        <table class="totals-box">
+                            <tr>
+                                <td class="lbl">Sub Total:</td>
+                                <td class="val"><span t-out="'%.2f' % (info.get('sub_total') or 0.0)"/></td>
+                            </tr>
+                            <tr>
+                                <td class="lbl">Total Descuento:</td>
+                                <td class="val"><span t-out="'%.2f' % (info.get('descuento') or 0.0)"/></td>
+                            </tr>
+                            <tr>
+                                <td class="lbl" style="font-weight: 900;">Total:</td>
+                                <td class="val" style="font-weight: 900;"><span t-out="'%.2f' % (info.get('total') or 0.0)"/></td>
+                            </tr>
+                        </table>
+                    </t>
+
+                    <!-- ===== FIRMAS — Bootstrap row/col (sin <table>) ===== -->
+                    <!-- Bootstrap row+col-6 usa el grid clásico de Odoo.sh; sin flex
+                         explícito en el contenido → altura calculada desde el contenido
+                         sin riesgo de colapso a cero. -->
+                    <div class="row text-center" style="margin-top: 50px; page-break-inside: avoid;">
+                        <!-- Izquierda: ELABORADO POR (prioriza validador → responsable → creador) -->
+                        <div class="col-6">
+                            <div class="sig-label">&#160;</div>
+                            <div class="sig-line">
+                                <div class="sig-title">ELABORADO POR</div>
+                                <div class="sig-name">
+                                    (<span t-out="o.validated_by_id.name or o.user_id.name or o.create_uid.name"/>)
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Derecha: etiqueta "VENTA ALMACEN" sobre la línea "RECIBIDO" -->
+                        <div class="col-6">
+                            <div class="sig-label">VENTA ALMACEN</div>
+                            <div class="sig-line">
+                                <div class="sig-title">RECIBIDO</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+              </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

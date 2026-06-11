@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.siat</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+
+                    <app data-string="SIAT" id="siat_conf_menu" string="SIAT" name="siat_module">
+                        <block title="Credenciales" id="credentials_conf_setting">
+                            <setting string="NIT"
+                                     help="NIT de la empresa registrado en el SIN. Se guarda por empresa.">
+                                <field name="siat_nit"/>
+                            </setting>
+                            <setting string="Razón Social"
+                                     help="Nombre legal de la empresa. Se edita por empresa.">
+                                <field name="social_reason"/>
+                            </setting>
+                            <setting string="Token SIAT"
+                                     help="Token delegado otorgado por el SIN para esta empresa.">
+                                <field name="delegated_token"/>
+                            </setting>
+                        </block>
+                        <block title="Configuración General" id="general_conf_setting">
+                            <setting string="Nombre del Sistema">
+                                <field name="system_name"/>
+                            </setting>
+                            <setting string="SIAT URL base">
+                                <field name="url_siat"/>
+                            </setting>
+                        </block>
+                        <block title="Configuración de Correo" id="mail_conf_setting">
+                            <setting string="Correo de Envío"
+                                     help="Correo desde el cual se enviarán las facturas">
+                                <field name="siat_email"/>
+                            </setting>
+                            <setting string="Nombre del Remitente"
+                                     help="Nombre que aparecerá como remitente del correo">
+                                <field name="siat_email_name"/>
+                            </setting>
+                        </block>
+                        <block title="Configuración de Facturación" id="tax_conf_setting">
+                            <setting string="Código del Sistema">
+                                <field name="system_code"/>
+                            </setting>
+                            <setting string="Ambiente">
+                                <field name="environment"/>
+                            </setting>
+                            <setting string="Modalidad">
+                                <field name="siat_mode"/>
+                            </setting>
+                            <setting string="Llave Privada" invisible="siat_mode != '1'">
+                                <field name="pk_file" filename="pk_file_name"/>
+                                <field name="pk_file_name" invisible="1"/>
+                            </setting>
+                            <setting string="Certificado" invisible="siat_mode != '1'">
+                                <field name="cert_file" filename="cert_file_name"/>
+                                <field name="cert_file_name" invisible="1"/>
+                            </setting>
+                            <setting string="CAFC">
+                                <field name="cafc"/>
+                            </setting>
+                            <setting string="Modo Facturación">
+                                <field name="mode_siat"/>
+                            </setting>
+                        </block>
+                        <block title="CUIS" id="codes_conf_setting">
+                            <setting>
+                                <div class="mt16">
+                                    <label for="cuis" class="mr4"/>
+                                    <field name="cuis" readonly="1"/>
+                                </div>
+                                <div class="mt16">
+                                    <label for="cuis_exp" class="mr4"/>
+                                    <field name="cuis_exp" readonly="1" class="small"/>
+                                </div>
+                                <div class="mt16">
+                                    <button name="request_cuis" string="Obtener Código" type="object"/>
+                                </div>
+                            </setting>
+                        </block>
+                    </app>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

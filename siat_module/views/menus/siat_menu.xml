@@ -1,0 +1,56 @@
+<odoo>
+  <menuitem id="siat_root_menu" name="Facturación SIAT">
+    <menuitem id="sync_menu" name="Sincronización" sequence="1">
+      <menuitem id="siat_pos_menu" action="siat_pos_action"/>
+      <menuitem id="syn_menu_activities" action="siat_sync_activity_action"/>
+      <menuitem id="syn_menu_cancellation_reason" action="siat_sync_cancellation_reason"/>
+      <menuitem id="syn_menu_countries" action="siat_sync_countries"/>
+      <menuitem id="syn_menu_currency_type" action="siat_sync_currency_type"/>
+      <menuitem id="syn_menu_doc_sector" action="siat_sync_doc_sector"/>
+      <menuitem id="syn_menu_emission_type" action="siat_sync_emission_type"/>
+      <menuitem id="syn_menu_identity_document" action="siat_sync_identity_document"/>
+      <menuitem id="syn_menu_invoice_label" action="siat_sync_invoice_labels"/>
+      <menuitem id="syn_menu_invoice_type" action="siat_sync_invoice_type"/>
+      <menuitem id="syn_menu_measure_units" action="siat_sync_measure_units"/>
+      <menuitem id="syn_menu_payment_type" action="siat_sync_payment_type"/>
+      <menuitem id="syn_menu_pos_type" action="siat_sync_pos_type"/>
+      <menuitem id="syn_menu_product_service" action="siat_sync_product_service"/>
+      <menuitem id="syn_menu_room_type" action="siat_sync_room_type"/>
+      <menuitem id="syn_menu_service_message" action="siat_sync_service_message"/>
+      <menuitem id="syn_menu_significant_event" action="siat_sync_significant_event"/>
+      <menuitem id="syn_menu_type_document_sector" action="siat_sync_type_document_sector"/>
+    </menuitem>
+
+    <menuitem id="siat_invoice_menu" name="Registros" sequence="2">
+      <menuitem id="invoices_root_menu" name="Facturas" sequence="1">
+        <menuitem id="sync_invoices" action="siat_sync_invoices"/>
+        <menuitem id="pending_invoices" action="siat_pending_invoices_invoicer"/>
+      </menuitem>
+
+      <menuitem id="sync_events" action="siat_events_action"/>
+      <menuitem id="sync_cufds" action="siat_cufds_action"/>
+    </menuitem>
+
+    <menuitem id="siat_config_settings_menu" name="Configuración">
+      <menuitem
+        id="keys_config_menu"
+        name="Tokens"
+        action="siat_config_settings_action"
+        groups="base.group_system"
+      />
+      
+      <menuitem
+        id="branches_menu"
+        name="Sucursales"
+        action="siat_branches_action"
+        groups="base.group_system"
+      />
+    </menuitem>
+  </menuitem>
+
+  <menuitem
+    id="siat_root_menu"
+    name="Facturación SIAT"
+    web_icon="siat_module,static/description/icon.png"
+    sequence="1"/>
+</odoo>

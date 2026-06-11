@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="siat_invoicer_view_list" model="ir.ui.view">
+      <field name="name">siat.invoicer.view.list</field>
+      <field name="model">siat.invoicer</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="pos_ids" />
+          <field name="nombre_razon" />
+          <field name="write_date" />
+        </list>
+      </field>
+    </record>
+    <record id="siat_invoicer_view_form" model="ir.ui.view">
+    <field name="name">siat.invoicer.view.form</field>
+    <field name="model">siat.invoicer</field>
+    <field name="arch" type="xml">
+      <form duplicate="false">
+        <sheet>
+          <group>
+            <field name="has_event" invisible="1"/>
+            <field name="siat_connection_ok" invisible="1"/>
+            <field name="active_event_lab" invisible="has_event == False" />
+            <field name="event_nro_factura" invisible="has_event not in [5,6,7]"/>
+          </group>
+          <group col="4">
+            <field name="show_validate_nit" invisible="1"/>
+            <field name="readonly_razon" invisible="1"/>
+            <group>
+              <field name="date" readonly="has_event not in [5,6,7]" />
+              <field name="tipo_documento" />
+              <field name="nombre_razon" readonly="readonly_razon" force_save="1"/>
+              <field name="correo" />
+            </group>
+            <group >
+              <field name="pos_ids" readonly="1"/>
+              <field name="nit_ci" />
+              <field name="complement" invisible="not show_complement" />
+            </group>
+            <group>            
+              <field name="show_complement" invisible="1"/>
+              <button string="Buscar Documento" name="validate_doc" type="object" class="oe_highlight" invisible="show_validate_nit != False"/>
+              <button string="Validar NIT" name="validate_nit" type="object" class="oe_highlight" invisible="show_validate_nit == False or has_event != False"/>
+              <button string="Factura Fuera de Linea" name="action_simulate_offline" type="object" class="oe_highlight" invisible="has_event != False"/>
+            </group>
+            <group invisible="show_validate_nit == False and has_event == False">
+              <field name="except_nit" widget="radio" readonly="1"/>
+            </group>
+          </group>
+          <group >
+              <field name="productos_ids">
+                <list editable="bottom">
+                  <field name="product_id" />
+                  <field name="quantity" />
+                  <field name="price_unit"/>
+                  <field name="custom_discount" />
+                  <field name="price_total" readonly="1" force_save="1"/>
+                </list>
+              </field>
+          </group>
+          <group name="payments" string="Métodos de Pago">
+              <field name="metodo_pago" context="{'order_display': 'code asc' }"/>
+          </group>
+          <group col="3">
+            <field name="has_card" invisible="1" />
+            <field name="has_gift_card" invisible="1" />
+            <field name="has_payment" invisible="1" />
+            <field name="has_check" invisible="1" />
+            <field name="has_check_gif" invisible="1" />
+            <group>
+              <field name="pago_efectivo" invisible="has_payment != True"/>
+            </group>
+            <group>
+              <field name="num_tarjeta" invisible="has_check != True and has_card != True" widget="credit_card_widget"/>
+              <field name="pago_tarjeta" invisible="has_card != True" />
+            </group>
+            <group>
+              <field name="gift_card_code" invisible="has_check_gif != True and has_gift_card != True" />
+              <field name="pago_gift_card" invisible="has_gift_card != True" />
+            </group>
+          </group>
+          <group string="Totales">
+            <group>
+              <field name="descuento"/>
+            </group>
+            <group>
+              <field name="total_discount_sum" readonly="1" force_save="1"/>
+            </group>
+            <button name="facturar" type="object" string="Generar Factura" class="btn-primary"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+</odoo>

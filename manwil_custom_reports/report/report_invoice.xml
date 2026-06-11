@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============ ACCIÓN DE REPORTE ============ -->
+    <record id="action_report_manwil_invoice" model="ir.actions.report">
+        <field name="name">Factura Boliviana (Media Carta)</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">manwil_custom_reports.report_manwil_invoice_document</field>
+        <field name="report_file">manwil_custom_reports.report_manwil_invoice_document</field>
+        <field name="paperformat_id" ref="manwil_custom_reports.paperformat_media_carta_landscape"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Factura - %s' % (object.siat_invoice_id.invoice_number or object.name)</field>
+    </record>
+
+    <!-- ============ PLANTILLA QWEB ============ -->
+    <template id="report_manwil_invoice_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+              <div class="article"
+                   t-att-data-oe-model="o and o._name"
+                   t-att-data-oe-id="o and o.id"
+                   t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-set="info" t-value="info_map.get(o.id, {})"/>
+
+                <div class="page manwil-inv" style="padding-top: 0px;">
+                    <style>
+                        .manwil-inv { font-family: Arial, Helvetica, sans-serif; font-size: 8pt; color: #333; line-height: 1.2; }
+
+                        /* ========================================= */
+                        /* TABLA-LIMPIA: elimina bordes Bootstrap    */
+                        /* ========================================= */
+                        .table-clean,
+                        .table-clean tr,
+                        .table-clean th,
+                        .table-clean td {
+                            border: 0 !important;
+                            border-top: 0 !important;
+                            border-bottom: 0 !important;
+                            border-left: 0 !important;
+                            border-right: 0 !important;
+                            box-shadow: none !important;
+                            outline: 0 !important;
+                        }
+                        .border-top-black    { border-top: 1px solid black !important; }
+                        .border-bottom-black { border-bottom: 1px solid black !important; }
+
+                        /* ENCABEZADO */
+                        .manwil-inv .header-table { width: 100%; margin-bottom: 5px; border-collapse: separate; border: 0 !important; }
+                        .manwil-inv .header-table td { vertical-align: middle; border: 0 !important; }
+
+                        .manwil-inv .company-name { font-size: 10pt; font-weight: bold; color: #444; text-transform: uppercase; margin-bottom: 2px; }
+                        .manwil-inv .company-sub { font-size: 9pt; font-weight: bold; color: #444; margin-top: 1px; }
+                        .manwil-inv .company-address { font-size: 7pt; color: #444; margin-top: 2px; line-height: 1.0; text-transform: uppercase; }
+
+                        .manwil-inv .doc-title { text-align: center; font-size: 14pt; font-weight: 900; color: #444; }
+                        .manwil-inv .doc-title small { display: block; font-size: 9.5pt; font-weight: normal; margin-top: 1px; }
+
+                        /* Recuadro Fiscal */
+                        .manwil-inv .fiscal { border: 1.5pt solid #2E5395; border-radius: 12px; padding: 6px 10px; }
+                        .manwil-inv .fiscal table { line-height: 1.3; border-collapse: collapse; width: 100%; }
+                        .manwil-inv .fiscal .lbl { font-weight: bold; font-size: 8pt; color: #333; vertical-align: top; width: 45%; }
+                        .manwil-inv .fiscal td { font-size: 8pt; color: #333; vertical-align: top; }
+                        .manwil-inv .fiscal .cuf { font-size: 8pt; word-break: break-all; letter-spacing: 0px; }
+
+                        /* DATOS DEL CLIENTE */
+                        .manwil-inv .client-info { width: 100%; margin-bottom: 5px; font-size: 9.5pt; border-collapse: separate; border: 0 !important; }
+                        .manwil-inv .client-info td { padding: 2px; vertical-align: middle; border: 0 !important; }
+                        .manwil-inv .client-info .lbl-client { font-weight: bold; color: #555; width: 18%; }
+                        .manwil-inv .client-info .val-client { color: #222; width: 32%; }
+
+                        /* TABLA DE ITEMS (Cápsulas) */
+                        .manwil-inv .items-table {
+                            width: 100%;
+                            border-collapse: separate;
+                            border-spacing: 0 4px;
+                            margin-top: 2px;
+                            margin-bottom: 2px;
+                        }
+                        .manwil-inv .items-table thead tr { background-color: #2E5395; color: #ffffff; }
+                        .manwil-inv .items-table th {
+                            padding: 6px 4px;
+                            font-size: 8pt;
+                            font-weight: bold;
+                            border: 0 !important;
+                            box-shadow: none !important;
+                            vertical-align: middle;
+                            text-align: center;
+                        }
+                        .manwil-inv .items-table th:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; padding-left: 8px; }
+                        .manwil-inv .items-table th:last-child  { border-top-right-radius: 10px; border-bottom-right-radius: 10px; padding-right: 8px; }
+
+                        /* Resetear herencia Bootstrap en filas de cuerpo */
+                        .manwil-inv .items-table tbody tr {
+                            background-color: transparent;
+                            border: 0 !important;
+                            box-shadow: none !important;
+                        }
+                        .manwil-inv .items-table td {
+                            padding: 4px;
+                            font-size: 9pt;
+                            vertical-align: middle;
+                            border-top: 1pt solid #2E5395 !important;
+                            border-bottom: 1pt solid #2E5395 !important;
+                            border-left: 0.5pt solid #2E5395 !important;
+                            border-right: 0 !important;
+                            box-shadow: none !important;
+                        }
+                        .manwil-inv .items-table td:first-child {
+                            border-left: 1pt solid #2E5395 !important;
+                            border-top-left-radius: 8px;
+                            border-bottom-left-radius: 8px;
+                            padding-left: 12px;
+                        }
+                        .manwil-inv .items-table td:last-child {
+                            border-right: 1pt solid #2E5395 !important;
+                            border-top-right-radius: 8px;
+                            border-bottom-right-radius: 8px;
+                            padding-right: 12px;
+                        }
+                        .manwil-inv .items-table td.num      { text-align: right; }
+                        .manwil-inv .items-table td.left-num { text-align: left; }
+                        .manwil-inv .items-table td.ctr      { text-align: center; }
+
+                        /* TABLA DE TOTALES */
+                        .manwil-inv .totals-table { border-collapse: collapse; width: 55%; margin-left: auto; margin-top: 2px; }
+                        .manwil-inv .totals-table tr {
+                            border: 0 !important;
+                            box-shadow: none !important;
+                        }
+                        .manwil-inv .totals-table td {
+                            padding: 2px 6px;
+                            border: 0.5pt solid #2E5395 !important;
+                            box-shadow: none !important;
+                        }
+                        .manwil-inv .totals-table td.k { text-align: right; font-weight: bold; color: #444; }
+                        .manwil-inv .totals-table td.v { text-align: right; width: 25%; color: #333; }
+
+                        /* FOOTER LEGAL Y QR */
+                        /* fact-footer es un div — border-collapse no aplica a divs */
+                        .manwil-inv .fact-footer { margin-top: 8px; page-break-inside: avoid; }
+                        .manwil-inv .fact-footer .son-text { font-size: 9pt; margin-bottom: 6px; text-align: left; color: #333; }
+                        .manwil-inv .legend-strong { font-size: 7.5pt; color: #333; text-transform: uppercase; font-weight: bold; }
+                        .manwil-inv .legend { font-size: 7pt; color: #333; }
+                    </style>
+
+                    <!-- ===== Encabezado ===== -->
+                    <!-- table-clean en header-table y sus tablas internas: ninguna
+                         de ellas tiene bordes visibles intencionales -->
+                    <table class="header-table table-clean" border="0" style="border: 0 !important;">
+                        <tr>
+                            <td style="width:42%; border: none !important; box-shadow: none !important;">
+                                <!-- Tabla interna: logo + nombre empresa -->
+                                <table class="table-clean" border="0" cellpadding="0" cellspacing="0" style="width: 100%; border: none !important; outline: none !important;">
+                                    <tr>
+                                        <td style="width: 1%; white-space: nowrap; padding-right: 8px; text-align: left; vertical-align: middle; border: none !important;">
+                                            <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 85px; max-width: 150px; object-fit: contain;"/>
+                                        </td>
+                                        <td style="text-align: center; vertical-align: middle; border: none !important;">
+                                            <div class="company-name"><span t-out="info.get('razon_social')"/></div>
+                                            <div class="company-sub"><span t-out="info.get('sucursal')"/></div>
+                                            <div class="company-sub">
+                                                No. Punto de Venta <span t-out="info.get('punto_venta')"/>
+                                            </div>
+                                            <div class="company-address">
+                                                <span t-out="info.get('address') or ''"/><br/>
+                                                Teléfono <span t-out="info.get('telefono') or ''"/><br/>
+                                                <span t-out="info.get('ciudad') or ''"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="width:23%; text-align: center; border: none !important; box-shadow: none !important;">
+                                <div class="doc-title">
+                                    FACTURA
+                                    <small>(Con Derecho a Crédito Fiscal)</small>
+                                </div>
+                            </td>
+                            <td style="width:35%; border: none !important; box-shadow: none !important;">
+                                <div class="fiscal">
+                                    <!-- Tabla interna del recuadro fiscal: el borde está en .fiscal
+                                         (el div), no en la tabla; la tabla en sí no necesita bordes -->
+                                    <table class="table-clean" border="0" cellpadding="0" cellspacing="0" style="width: 100%; border: none !important; outline: none !important;">
+                                        <tr>
+                                            <td class="lbl" style="border: none !important;">NIT:</td>
+                                            <td style="border: none !important;"><span t-out="info.get('nit_emisor') or ''"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl" style="border: none !important;">FACTURA N°:</td>
+                                            <td style="border: none !important;"><span t-out="info.get('invoice_number')"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="lbl" style="border: none !important;">CÓD. AUTORIZACIÓN:</td>
+                                            <td class="cuf" style="border: none !important;">
+                                                <span t-if="info.get('has_siat')" style="white-space: pre-line;" t-out="info.get('cuf_chunked') or ''"/>
+                                                <span t-else="" style="font-weight:bold; color:#b00;">SIN VALOR FISCAL</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ===== Datos del cliente ===== -->
+                    <!-- table-clean: tabla de layout, sin bordes intencionales -->
+                    <table t-if="o.move_type != 'in_receipt'" class="client-info table-clean" border="0" style="border: 0 !important;">
+                        <tr>
+                            <td class="lbl-client">Fecha:</td>
+                            <td class="val-client"><span t-out="info.get('fecha')"/></td>
+                            <td class="lbl-client">NIT/CI/CEX:</td>
+                            <td class="val-client"><span t-out="info.get('nit_ci_cex') or ''"/></td>
+                        </tr>
+                        <tr>
+                            <td class="lbl-client">Nombre/Razón Social:</td>
+                            <td class="val-client"><span t-out="info.get('customer_name') or ''"/></td>
+                            <td class="lbl-client">Cod. Cliente:</td>
+                            <td class="val-client"><span t-out="info.get('cod_cliente') or ''"/></td>
+                        </tr>
+                    </table>
+
+                    <!-- ===== Líneas de factura ===== -->
+                    <!-- Sin table-clean: bordes intencionales azules, forzados con
+                         !important en el CSS para neutralizar herencia Bootstrap -->
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th style="width:13%;">CÓDIGO<br/>PRODUCTO<br/>/SERVICIO</th>
+                                <th style="width:10%;">CANTIDAD</th>
+                                <th style="width:12%;">UNIDAD<br/>MEDIDA</th>
+                                <th>DESCRIPCIÓN</th>
+                                <th style="width:12%;">PRECIO<br/>UNITARIO</th>
+                                <th style="width:11%;">DESCUENTO</th>
+                                <th style="width:13%;">SUBTOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="info.get('items') or []" t-as="item">
+                                <td><span t-out="item.get('codigo')"/></td>
+                                <td class="left-num"><span t-out="item.get('cantidad')"/></td>
+                                <td><span t-out="item.get('unidad')"/></td>
+                                <td><span t-out="item.get('descripcion')"/></td>
+                                <td class="num"><span t-out="'{0:,.2f}'.format(item.get('precio') or 0.0)"/></td>
+                                <td class="num"><span t-out="'{0:,.2f}'.format(item.get('descuento') or 0.0)"/></td>
+                                <td class="num"><span t-out="'{0:,.2f}'.format(item.get('subtotal') or 0.0)"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- ===== Caja de totales ===== -->
+                    <!-- Sin table-clean: bordes azules intencionales en .totals-table td,
+                         forzados con !important; filas sin borde propio -->
+                    <table class="totals-table">
+                        <tr><td class="k">SUBTOTAL Bs</td><td class="v"><span t-out="'{0:,.2f}'.format(info.get('subtotal') or 0.0)"/></td></tr>
+                        <tr><td class="k">DESCUENTO Bs</td><td class="v"><span t-out="'{0:,.2f}'.format(info.get('descuento') or 0.0)"/></td></tr>
+                        <tr><td class="k">TOTAL Bs</td><td class="v"><span t-out="'{0:,.2f}'.format(info.get('total') or 0.0)"/></td></tr>
+                        <tr><td class="k">MONTO GIFT CARD Bs</td><td class="v"><span t-out="'{0:,.2f}'.format(info.get('giftcard') or 0.0)"/></td></tr>
+                        <tr><td class="k">MONTO A PAGAR Bs</td><td class="v"><span t-out="'{0:,.2f}'.format(info.get('payamount') or 0.0)"/></td></tr>
+                        <tr><td class="k">IMPORTE BASE CRÉDITO FISCAL</td><td class="v"><span t-out="'{0:,.2f}'.format(info.get('payamount') or 0.0)"/></td></tr>
+                    </table>
+
+                    <!-- ===== Footer de facturación ===== -->
+                    <div class="fact-footer">
+                        <div class="son-text">
+                            SON: <span t-out="info.get('amount_text') or ''"/> (BOLIVIANOS)
+                        </div>
+                        <!-- Bootstrap row/col: reemplaza la tabla QR+leyenda para evitar
+                             el colapso de altura en Odoo.sh cuando qr está vacío. Un <td>
+                             con <img t-if="..."> colapsa a altura cero en wkhtmltopdf. -->
+                        <div class="row">
+                            <div class="col-auto" style="width: 100px; text-align: left; padding-right: 5px;">
+                                <img t-if="info.get('qr')" t-att-src="info.get('qr')"
+                                     style="height: 85px; width: 85px;" alt="QR"/>
+                            </div>
+                            <div class="col" style="text-align: center; padding-left: 5px;">
+                                <div class="legend-strong">ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAÍS, EL USO ILÍCITO SERÁ SANCIONADO PENALMENTE DE ACUERDO A LEY</div>
+                                <div class="legend" style="margin-top:3px;">Ley N° 453: Tienes derecho a recibir información que te proteja de la publicidad engañosa.</div>
+                                <div class="legend" style="margin-top:3px;">"Este documento es la Representación Gráfica de un Documento Fiscal Digital emitido en una modalidad de facturación en línea"</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

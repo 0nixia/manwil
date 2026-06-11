@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="siat_event_view_list" model="ir.ui.view">
+    <field name="name">siat.event.view.list</field>
+    <field name="model">siat.event</field>
+    <field name="arch" type="xml">
+      <list duplicate="false" default_order='id desc'>
+        <field name="evento_id" string="Tipo Evento" />
+        <field name="point_of_sale_id"/>
+        <field name="fecha_inicio" />
+        <field name="fecha_fin" />
+        <field name="descripcion"/>
+        <field name="status"/>
+        <button name="action_verify" type="object" string="Verificar Paquetes" invisible="status != 'PENDING'"/>
+        <button name="action_close" type="object" string="Enviar Paquetes" invisible="status != 'OPEN'"/>
+        <button name="action_void" type="object" string="Anular Evento" class="btn-danger" invisible="status != 'OPEN'"/>
+      </list>
+    </field>
+  </record>
+  <record id="siat_event_view_form" model="ir.ui.view">
+    <field name="name">siat.event.view.form</field>
+    <field name="model">siat.event</field>
+    <field name="arch" type="xml">
+      <form string="Nuevo Evento" duplicate="false" edit="status ">
+        <sheet>
+          <group>
+            <group>
+              <field name="point_of_sale_id" default_focus="1" readonly="id != False"/>
+              <field name="evento_id" readonly="id != False"/>
+              <field name="descripcion" readonly="id != False"/>
+            </group>
+            <group>
+              <field name="fecha_inicio"  readonly="id != False"/>
+              <field name="fecha_fin" invisible="evento_id not in ['5','6','7']" required="evento_id in ['5','6','7']" readonly="id != False"/>
+            </group>
+          </group>
+          <group invisible="evento_id not in ['5','6','7']">
+            <field name="pos_aux_text" invisible="1" />
+            <field name="cufd_selection" options="{'no_create_edit': True, 'no_create': True}"  readonly="id != False"/>
+            <field name="cufd_evento" readonly="1" required="evento_id in ['5','6','7']" force_save="1"/>
+          </group>
+          <group>
+            <field name="packages" readonly="1"  invisible="id == False">
+              <list>
+                  <field name="status"/>
+                  <field name="data"/>
+              </list>
+            </field>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+</odoo>

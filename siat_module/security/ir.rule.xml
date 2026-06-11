@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_siat_invoice_company" model="ir.rule">
+        <field name="name">SIAT Invoice: company isolation</field>
+        <field name="model_id" ref="model_siat_invoice"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_activity_company" model="ir.rule">
+        <field name="name">SIAT Activity: company isolation</field>
+        <field name="model_id" ref="model_siat_activity"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_measure_unit_company" model="ir.rule">
+        <field name="name">SIAT Measure Unit: company isolation</field>
+        <field name="model_id" ref="model_siat_measure_unit"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_product_service_company" model="ir.rule">
+        <field name="name">SIAT Product Service: company isolation</field>
+        <field name="model_id" ref="model_siat_product_service"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_cufd_code_company" model="ir.rule">
+        <field name="name">SIAT CUFD Code: company isolation</field>
+        <field name="model_id" ref="model_siat_cufd_code"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_cuis_code_company" model="ir.rule">
+        <field name="name">SIAT CUIS Code: company isolation</field>
+        <field name="model_id" ref="model_siat_cuis_code"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_branch_company" model="ir.rule">
+        <field name="name">SIAT Branch: company isolation</field>
+        <field name="model_id" ref="model_siat_branch"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_point_of_sale_company" model="ir.rule">
+        <field name="name">SIAT Point of Sale: company isolation</field>
+        <field name="model_id" ref="model_siat_point_of_sale"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_client_company" model="ir.rule">
+        <field name="name">SIAT Client: company isolation</field>
+        <field name="model_id" ref="model_siat_client"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_invoicer_company" model="ir.rule">
+        <field name="name">SIAT Invoicer: company isolation</field>
+        <field name="model_id" ref="model_siat_invoicer"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_product_homologation_company" model="ir.rule">
+        <field name="name">SIAT Product Homologation: company isolation</field>
+        <field name="model_id" ref="model_siat_product_homologation"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_event_company" model="ir.rule">
+        <field name="name">SIAT Event: company isolation</field>
+        <field name="model_id" ref="model_siat_event"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_invoiceitem_company" model="ir.rule">
+        <field name="name">SIAT Invoice Item: company isolation</field>
+        <field name="model_id" ref="model_siat_invoiceitem"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_cancellation_reason_company" model="ir.rule">
+        <field name="name">SIAT Cancellation Reason: company isolation</field>
+        <field name="model_id" ref="model_siat_cancellation_reason"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_country_company" model="ir.rule">
+        <field name="name">SIAT Country: company isolation</field>
+        <field name="model_id" ref="model_siat_country"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_currency_type_company" model="ir.rule">
+        <field name="name">SIAT Currency Type: company isolation</field>
+        <field name="model_id" ref="model_siat_currency_type"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_emission_type_company" model="ir.rule">
+        <field name="name">SIAT Emission Type: company isolation</field>
+        <field name="model_id" ref="model_siat_emission_type"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_invoice_type_company" model="ir.rule">
+        <field name="name">SIAT Invoice Type: company isolation</field>
+        <field name="model_id" ref="model_siat_invoice_type"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_payment_type_company" model="ir.rule">
+        <field name="name">SIAT Payment Type: company isolation</field>
+        <field name="model_id" ref="model_siat_payment_type"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_pos_type_company" model="ir.rule">
+        <field name="name">SIAT POS Type: company isolation</field>
+        <field name="model_id" ref="model_siat_pos_type"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_room_type_company" model="ir.rule">
+        <field name="name">SIAT Room Type: company isolation</field>
+        <field name="model_id" ref="model_siat_room_type"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_service_message_company" model="ir.rule">
+        <field name="name">SIAT Service Message: company isolation</field>
+        <field name="model_id" ref="model_siat_service_message"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_significant_event_company" model="ir.rule">
+        <field name="name">SIAT Significant Event: company isolation</field>
+        <field name="model_id" ref="model_siat_significant_event"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_type_document_sector_company" model="ir.rule">
+        <field name="name">SIAT Type Document Sector: company isolation</field>
+        <field name="model_id" ref="model_siat_type_document_sector"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_identity_document_company" model="ir.rule">
+        <field name="name">SIAT Identity Document: company isolation</field>
+        <field name="model_id" ref="model_siat_identity_document"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_emp_pos_company" model="ir.rule">
+        <field name="name">SIAT EmpPos: company isolation</field>
+        <field name="model_id" ref="model_siat_employee_pos"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+
+    <record id="rule_siat_emp_pos_manager" model="ir.rule">
+        <field name="name">SIAT EmpPos: manager full access</field>
+        <field name="model_id" ref="model_siat_employee_pos"/>
+        <field name="groups" eval="[(4, ref('siat_module.group_siat_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_siat_emp_pos_own" model="ir.rule">
+        <field name="name">SIAT EmpPos: user own record only</field>
+        <field name="model_id" ref="model_siat_employee_pos"/>
+        <field name="groups" eval="[(4, ref('siat_module.group_siat_user'))]"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+</odoo>

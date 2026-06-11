@@ -1,0 +1,35 @@
+<odoo>
+  <record id="view_res_users_form_inherit_siat" model="ir.ui.view">
+    <field name="name">res.users.form.inherit.siat</field>
+    <field name="model">res.users</field>
+    <field name="inherit_id" ref="base.view_users_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//page[@name='access_rights']" position="after">
+        <page string="SIAT" name="siat_page">
+          <group string="Configuración activa (empresa actual)">
+            <field name="siat_employee_pv_display"
+                   string="Punto de Venta"
+                   readonly="1"/>
+            <field name="siat_employee_act_display"
+                   string="Actividad Económica"
+                   readonly="1"/>
+          </group>
+          <div class="alert alert-info d-flex align-items-start gap-2 mt-2 mb-0" role="alert">
+            <i class="fa fa-info-circle mt-1"/>
+            <span>
+              Para asignar o cambiar el Punto de Venta, edita directamente
+              el empleado vinculado a este usuario en la pestaña SIAT.
+              Puedes tener un PV distinto por cada empresa.
+            </span>
+          </div>
+          <footer>
+            <button string="Ir al Empleado"
+                    type="object"
+                    name="action_open_siat_employee"
+                    class="btn-primary"/>
+          </footer>
+        </page>
+      </xpath>
+    </field>
+  </record>
+</odoo>
