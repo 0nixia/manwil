@@ -238,7 +238,7 @@ class ServiceSiatSync(ServiceSiat):
 			'_persist_cufd | vals=%s',
 			{k: v for k, v in vals.items() if k != 'service_response'},
 		)
-		record = self.env['siat.cufd_code'].create(vals)
+		record = self.env['siat.cufd_code'].sudo().create(vals)
 		_logger.info(
 			'_persist_cufd | cufd_id=%d company=%d branch=%d pos=%d vigencia=%s',
 			record.id, self.env.company.id, sucursal, puntoventa, fecha_vigencia,
