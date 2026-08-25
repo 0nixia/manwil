@@ -32,7 +32,7 @@ class SolicitudServicioRecepcionFactura():
 		
 	def setBuffer(self, buff, compress=True):
 		self.archivo = gzip.compress(buff) if compress == True else buff
-		self.hashArchivo = hashlib.sha256(str(buff).encode('utf-8')).hexdigest()
+		self.hashArchivo = hashlib.sha256(buff).hexdigest().upper()
 	
 	def setBufferFromFiles(self, files):
 		pass
