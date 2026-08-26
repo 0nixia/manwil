@@ -315,7 +315,7 @@ class ServiceInvoices(ServiceSiat):
 		invoice_dict['ambiente'] = config['codigoAmbiente']
 		invoice_dict['company_id'] = self.env.company.id
 		
-		invoice = self.env['siat.invoice'].create(invoice_dict)
+		invoice = self.env['siat.invoice'].sudo().create(invoice_dict)
 		subtotal = 0
 		for request_item in invoiceData['items']:
 			invoice_item = {
@@ -335,7 +335,7 @@ class ServiceInvoices(ServiceSiat):
 				'discount': request_item['discount'],
 				'total': float_round((request_item['price'] * request_item['quantity']), precision_digits=2, rounding_method='HALF-EVEN') - request_item['discount'],
 			}
-			self.env['siat.invoiceitem'].create(invoice_item)
+			self.env['siat.invoiceitem'].sudo().create(invoice_item)
 			subtotal += (float_round((request_item['price'] * request_item['quantity']), precision_digits=2, rounding_method='HALF-EVEN') - request_item['discount'])
 
 		invoice.write({'subtotal': subtotal})

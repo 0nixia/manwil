@@ -153,10 +153,16 @@ class SiatPointOfSale(models.Model):
         try:
             res = service.consulta_puntos_venta(sucursal)
             if not res or not res.get('transaccion'):
-                mensajes = res.get('mensajesList', [{'descripcion': 'Error desconocido'}])
+                mensajes = res.get('mensajesList', [{'descripcion': 'Error desconocido'}]) if res else []
+                codigos = {m.get('codigo') for m in mensajes}
                 _logger.warning(
                     '_sync_sucursal | sucursal=%d | Error SIAT: %s', sucursal, mensajes
                 )
+                if 982 in codigos and sucursal == 0:
+                    # SIAT dice que este NIT no tiene ningún PV registrado todavía.
+                    # Configuración inicial: registramos el PV 0 / Casa Matriz de una,
+                    # para poder facturar de inmediato sin intervención manual.
+                    self._auto_register_pv0(service, company, company_env, sucursal)
                 return
             lista_siat = res.get('listaPuntosVentas', [])
             if isinstance(lista_siat, dict):
@@ -166,6 +172,89 @@ class SiatPointOfSale(models.Model):
             _logger.error(
                 '_sync_sucursal | sucursal=%d | %s', sucursal, traceback.format_exc()
             )
+
+    def _auto_register_pv0(self, service, company, company_env, sucursal):
+        """Configuración inicial: garantiza que exista Sucursal 0 (solo local,
+        SIAT no tiene endpoint para registrar sucursales) y Punto de Venta 0
+        (registrado de verdad en SIAT vía registroPuntoVenta, igual que si se
+        creara desde el botón 'Nuevo'). Solo actúa si aún no existe ninguno;
+        una vez registrado, SIAT deja de devolver el error 982 y este método
+        no se vuelve a ejecutar para esa sucursal.
+        """
+        try:
+            branch_rec = company_env['siat.branch'].search([
+                ('company_id', '=', company.id),
+                ('branch_code', '=', sucursal),
+            ], limit=1)
+            if not branch_rec:
+                branch_rec = company_env['siat.branch'].create({
+                    'company_id':  company.id,
+                    'branch_code': sucursal,
+                    'name':        'Casa Matriz' if sucursal == 0 else f'Sucursal {sucursal}',
+                })
+                _logger.info(
+                    '_auto_register_pv0 | sucursal=%d | Sucursal local creada id=%d',
+                    sucursal, branch_rec.id
+                )
+
+            pv_exists = company_env['siat.point_of_sale'].search([
+                ('company_id', '=', company.id),
+                ('codigo_sucursal', '=', sucursal),
+            ], limit=1)
+            if pv_exists:
+                _logger.info(
+                    '_auto_register_pv0 | sucursal=%d | Ya existe un PV local (id=%d), no se auto-registra otro',
+                    sucursal, pv_exists.id
+                )
+                return
+
+            pos_type_code = self._resolve_default_pos_type(company_env, company)
+            record = company_env['siat.point_of_sale'].create({
+                'company_id':      company.id,
+                'name':            f'{company.name} / Casa Matriz',
+                'descripcion':     'PV auto-registrado en configuración inicial',
+                'pos_type':        pos_type_code,
+                'codigo_sucursal': sucursal,
+                'siat_branch':     branch_rec.id,
+            })
+            _logger.info(
+                '_auto_register_pv0 | sucursal=%d | PV registrado en SIAT OK | '
+                'pos_siat_id=%d pos_type=%s',
+                sucursal, record.pos_siat_id, pos_type_code
+            )
+        except Exception:
+            _logger.error(
+                '_auto_register_pv0 | sucursal=%d | %s', sucursal, traceback.format_exc()
+            )
+
+    def _resolve_default_pos_type(self, company_env, company):
+        """Elige el tipo de PV a usar en el auto-registro. Busca uno cuya
+        descripción sugiera 'Casa Matriz' / punto físico estándar; si no
+        encuentra nada parecido, usa el primero disponible del catálogo
+        sincronizado (siat.pos_type) y lo deja registrado en el log para
+        que se pueda corregir manualmente si no es el correcto.
+        """
+        pos_types = company_env['siat.pos_type'].search([
+            ('company_id', '=', company.id)
+        ], order='code asc')
+        if not pos_types:
+            _logger.warning(
+                '_resolve_default_pos_type | company=%d | catálogo siat.pos_type vacío, '
+                'usando "1" como último recurso', company.id
+            )
+            return '1'
+        for pt in pos_types:
+            desc = (pt.description or '').upper()
+            if 'MATRIZ' in desc or 'FISIC' in desc or 'PRINCIPAL' in desc:
+                return str(pt.code)
+        chosen = pos_types[0]
+        _logger.warning(
+            '_resolve_default_pos_type | company=%d | no se encontró tipo tipo '
+            '"Casa Matriz"/"Físico" en el catálogo, usando el primero disponible: '
+            'code=%s descripcion=%s — VERIFICAR que sea el correcto',
+            company.id, chosen.code, chosen.description
+        )
+        return str(chosen.code)
 
     @api.model
     def _sync_pos_data(self, data, company, company_env, sucursal=0):
@@ -177,26 +266,11 @@ class SiatPointOfSale(models.Model):
             ('company_id', '=', current_company_id),
             ('branch_code', '=', sucursal),
         ], limit=1)
-        pv0_exists = company_env['siat.point_of_sale'].search([
-            ('pos_siat_id', '=', 0),
-            ('codigo_sucursal', '=', sucursal),
-            ('company_id', '=', current_company_id),
-        ], limit=1)
-        if not pv0_exists and sucursal == 0:
-            pv0_name = (
-                branch_rec.name + ' / PV 0'
-                if branch_rec
-                else f'Sucursal {sucursal} / Punto de Venta 0'
-            )
-            company_env['siat.point_of_sale'].create({
-                'company_id':      current_company_id,
-                'name':            pv0_name,
-                'pos_siat_id':     0,
-                'pos_type':        '0',
-                'active':          True,
-                'codigo_sucursal': sucursal,
-                'siat_branch':     branch_rec.id if branch_rec else False,
-            })
+        # Nota: el fallback que creaba un PV 0 "local" (sin registrarlo en
+        # SIAT) fue eliminado — ese registro fantasma es justo lo que causaba
+        # que consultaPuntoVenta siguiera devolviendo 982. Si no hay PVs,
+        # _sync_sucursal ya se encarga de registrar uno real vía
+        # _auto_register_pv0 antes de que este método llegue a ejecutarse.
         existing_records = company_env['siat.point_of_sale'].search([
             ('company_id', '=', current_company_id),
             ('codigo_sucursal', '=', sucursal),
